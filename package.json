@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "name": "mdv",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run --workspace @mdv/web dev",
+    "build": "npm run --workspace @mdv/web build",
+    "vscode:webview": "npm run --workspace @mdv/web build:vscode",
+    "vscode:dev": "npm run --workspace @mdv/vscode watch",
+    "test": "vitest",
+    "check": "biome check"
+  },
+  "sideEffects": false,
+  "bugs": {
+    "url": "https://github.com/yszk0123/mdv/issues"
+  },
+  "homepage": "https://github.com/yszk0123/mdv",
+  "keywords": [],
+  "author": "Yuji Suzuki",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.13.2",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5",
+    "vite": "^6.1.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

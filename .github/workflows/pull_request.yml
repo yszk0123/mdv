@@ -1,0 +1,30 @@
+name: Test
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: ./.github/actions/npm-cache
+
+      - name: Install dependencies
+        if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
+        run: npm install
+
+      - name: Run Biome
+        run: npm run check
+
+      - name: Run tests
+        run: npm run test
