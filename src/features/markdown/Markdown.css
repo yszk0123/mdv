@@ -1,0 +1,131 @@
+/**
+ * @see https://zenn.dev/hayato94087/articles/07f238b686d0a3
+ */
+@reference "../../main.css";
+
+.markdown {
+  @apply text-primary leading-normal break-words;
+}
+
+.markdown > * + * {
+  @apply mt-0 mb-4;
+}
+
+.markdown li + li {
+  @apply mt-1;
+}
+
+.markdown li > p + p {
+  @apply mt-6;
+}
+
+.markdown strong {
+  @apply font-semibold;
+}
+
+.markdown a {
+  @apply text-blue-600 font-semibold;
+}
+
+.markdown strong a {
+  @apply font-bold;
+}
+
+.markdown h1 {
+  @apply leading-tight border-b text-4xl font-semibold mb-4 mt-6 pb-2;
+}
+
+.markdown h2 {
+  @apply leading-tight border-b text-2xl font-semibold mb-4 mt-6 pb-2;
+}
+
+.markdown h3 {
+  @apply leading-snug text-lg font-semibold mb-4 mt-6;
+}
+
+.markdown h4 {
+  @apply leading-none text-base font-semibold mb-4 mt-6;
+}
+
+.markdown h5 {
+  @apply leading-tight text-sm font-semibold mb-4 mt-6;
+}
+
+.markdown h6 {
+  @apply leading-tight text-sm font-semibold text-muted mb-4 mt-6;
+}
+
+.markdown blockquote {
+  @apply text-base border-l-4 border-border pl-4 pr-4 text-gray-600 dark:text-gray-300;
+}
+
+.markdown code {
+  @apply font-mono text-sm inline bg-gray-200 dark:bg-gray-700 rounded-sm px-1 py-1;
+}
+
+.markdown pre {
+  @apply bg-gray-100 dark:bg-gray-800 rounded-sm p-4 whitespace-pre-wrap;
+}
+
+.markdown pre code {
+  @apply block bg-transparent dark:bg-transparent p-0 overflow-visible rounded-none;
+}
+
+.markdown ul {
+  @apply text-base pl-8 list-disc;
+}
+
+.markdown ol {
+  @apply text-base pl-8 list-decimal;
+}
+
+.markdown kbd {
+  @apply text-xs inline-block rounded-sm border px-1 py-5 align-middle font-normal font-mono shadow-sm;
+}
+
+.markdown table {
+  @apply text-base border-border;
+}
+
+.markdown th {
+  @apply border py-1 px-3;
+}
+
+.markdown td {
+  @apply border py-1 px-3;
+}
+
+/* Override pygments style background color. */
+/*
+.markdown .highlight pre {
+  @apply bg-gray-100 dark:bg-gray-800 !important;
+}
+  */
+
+/* Style the footnotes section. */
+.markdown .footnotes {
+  font-size: smaller;
+  color: #8b949e;
+  border-top: 1px solid #30363d;
+}
+
+/* Hide the section label for visual users. */
+.markdown .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  word-wrap: normal;
+  border: 0;
+}
+
+/* Place `[` and `]` around footnote references. */
+.markdown [data-footnote-ref]::before {
+  content: "[";
+}
+
+.markdown [data-footnote-ref]::after {
+  content: "]";
+}
