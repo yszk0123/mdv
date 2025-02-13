@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { transformMarkdownSectionToTable } from "./transformMarkdownSectionToTable";
+import { transformMarkdownToTable } from "./transformMarkdownSectionToTable";
 
 interface TestCase {
   title: string;
@@ -101,5 +101,5 @@ test.each<TestCase>([
     `),
   },
 ])("$title", ({ input, expected }) => {
-  expect(transformMarkdownSectionToTable(input)).toBe(expected);
+  expect(transformMarkdownToTable(input)).toBe(expected);
 });

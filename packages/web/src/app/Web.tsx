@@ -1,7 +1,8 @@
 import { useState, type JSX } from "react";
 import { Markdown } from "../features/markdown";
 import { Textarea } from "../components/ui/textarea";
-import { transformMarkdownSectionToTable } from "../features/parser";
+import { transformMarkdownToTable } from "../features/parser";
+import { TableView } from "@/features/table/Table";
 
 const INITIAL_TEXT = `
 # 大項目
@@ -17,7 +18,7 @@ export function Web(): JSX.Element {
   const [text, setText] = useState(INITIAL_TEXT);
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="m-4">
         <Textarea
           value={text}
@@ -25,7 +26,10 @@ export function Web(): JSX.Element {
         />
       </div>
       <div className="m-4">
-        <Markdown text={transformMarkdownSectionToTable(text)} />
+        <Markdown text={transformMarkdownToTable(text)} />
+      </div>
+      <div className="m-4">
+        <TableView text={text} onSubmit={setText} />
       </div>
     </div>
   );
