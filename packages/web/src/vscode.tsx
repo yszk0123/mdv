@@ -1,10 +1,10 @@
-import "./main.css";
+import "./common.css";
 
 import { createRoot } from "react-dom/client";
 
-import { App } from "./App";
+import { VSCode } from "./app/VSCode";
 
 const element = document.getElementById("app");
 if (element) {
-  createRoot(element).render(<App />);
+  createRoot(element).render(<VSCode />);
 }

@@ -19,6 +19,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/vite.config.mtste.config.mts", "types.d.ts"],
+  "include": ["src", "src/vite.config.mtste.config.mts", "types.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

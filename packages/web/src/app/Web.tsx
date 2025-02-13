@@ -1,7 +1,7 @@
 import { useState, type JSX } from "react";
-import { Markdown } from "./features/markdown";
-import { Textarea } from "./components/ui/textarea";
-import { parseMarkdownHeadingToTable } from "./features/parser";
+import { Markdown } from "../features/markdown";
+import { Textarea } from "../components/ui/textarea";
+import { parseMarkdownHeadingToTable } from "../features/parser";
 
 const INITIAL_TEXT = `
 # 大項目
@@ -13,7 +13,7 @@ const INITIAL_TEXT = `
 - [ ] 説明\\n説明
 `;
 
-export function App(): JSX.Element {
+export function Web(): JSX.Element {
   const [text, setText] = useState(INITIAL_TEXT);
 
   return (

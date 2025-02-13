@@ -1,7 +1,7 @@
 /**
  * @see https://zenn.dev/hayato94087/articles/07f238b686d0a3
  */
-@reference "../../main.css";
+@reference "../../common.css";
 
 .markdown {
   @apply text-primary leading-normal break-words;
