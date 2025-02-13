@@ -9,10 +9,8 @@
       "name": "Run Extension",
       "type": "extensionHost",
       "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-mdv"
-      ],
-      "outFiles": ["${workspaceFolder}/packages/vscode-mdv/out/**/*.js"],
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/packages/vscode"],
+      "outFiles": ["${workspaceFolder}/packages/vscode/out/**/*.js"],
       "preLaunchTask": "${defaultBuildTask}"
     }
   ]
