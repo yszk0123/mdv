@@ -1,16 +1,14 @@
 {
+  "private": true,
   "name": "mdv",
   "version": "0.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "npm run --workspace @mdv/web dev",
+    "build": "npm run --workspace @mdv/web build",
     "test": "vitest",
-    "check": "biome check",
-    "deploy": "gh-pages -d dist"
+    "check": "biome check"
   },
   "sideEffects": false,
   "bugs": {
@@ -20,28 +18,15 @@
   "keywords": [],
   "author": "Yuji Suzuki",
   "license": "MIT",
-  "dependencies": {
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.475.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-markdown": "^9.0.3",
-    "remark-gfm": "^4.0.1",
-    "tailwind-merge": "^3.0.1",
-    "tailwindcss-animate": "^1.0.7"
-  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@tailwindcss/postcss": "^4.0.6",
-    "@tailwindcss/vite": "^4.0.6",
     "@types/node": "^22.13.2",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "gh-pages": "^6.3.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.3",
-    "vite": "^6.1.0",
-    "vitest": "^3.0.5"
-  }
+    "vitest": "^3.0.5",
+    "vite": "^6.1.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

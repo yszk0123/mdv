@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "target": "es2022",
+    "lib": ["esnext", "dom"],
+    "noEmitOnError": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    // "allowSyntheticDefaultImports": true,
+    // "noPropertyAccessFromIndexSignature": true
+    "pretty": true,
+    "removeComments": false,
+    "resolveJsonModule": false,
+    "skipDefaultLibCheck": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "verbatimModuleSyntax": false
+  }
+}
