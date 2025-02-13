@@ -1,1 +1,1 @@
-export * from "./parseMarkdownHeadingToTable";
+export * from "./transformMarkdownSectionToTable";

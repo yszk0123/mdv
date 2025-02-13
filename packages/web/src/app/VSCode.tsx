@@ -1,6 +1,6 @@
 import { useEffect, useState, type JSX } from "react";
 import { Markdown } from "../features/markdown";
-import { parseMarkdownHeadingToTable } from "../features/parser";
+import { transformMarkdownSectionToTable } from "../features/parser";
 
 type MesssageData = {
   command: "update";
@@ -33,7 +33,7 @@ export function VSCode(): JSX.Element {
 
   return (
     <div className="m-4 bg-background">
-      <Markdown text={parseMarkdownHeadingToTable(text)} />
+      <Markdown text={transformMarkdownSectionToTable(text)} />
     </div>
   );
 }

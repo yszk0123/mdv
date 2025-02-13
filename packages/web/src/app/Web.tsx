@@ -1,7 +1,7 @@
 import { useState, type JSX } from "react";
 import { Markdown } from "../features/markdown";
 import { Textarea } from "../components/ui/textarea";
-import { parseMarkdownHeadingToTable } from "../features/parser";
+import { transformMarkdownSectionToTable } from "../features/parser";
 
 const INITIAL_TEXT = `
 # 大項目
@@ -25,7 +25,7 @@ export function Web(): JSX.Element {
         />
       </div>
       <div className="m-4">
-        <Markdown text={parseMarkdownHeadingToTable(text)} />
+        <Markdown text={transformMarkdownSectionToTable(text)} />
       </div>
     </div>
   );
