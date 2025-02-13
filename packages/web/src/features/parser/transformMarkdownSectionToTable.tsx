@@ -18,20 +18,20 @@ const RowType = {
   Ordered: "ordered",
 } as const;
 type RowType = (typeof RowType)[keyof typeof RowType];
-interface Column {
+interface TableColumn {
   text: string;
 }
-interface Row {
+interface TableRow {
   type: RowType;
-  columns: Column[];
+  columns: TableColumn[];
 }
-interface TableData {
+export interface TableData {
   header: string[];
   separator: string[];
-  rows: Row[];
+  rows: TableRow[];
 }
 
-function parseMarkdown(text: string): TableData {
+export function parseMarkdown(text: string): TableData {
   let prevDepth = 0;
   const lines: Line[] = text
     .split("\n")
@@ -42,7 +42,7 @@ function parseMarkdown(text: string): TableData {
       if (/^- \[ \] /.test(text)) {
         return {
           depth: prevDepth + 1,
-          text: text.replace(/- \[ \] /, "").replace(/\\n/g, "<br/>"),
+          text: text.replace(/- \[ \] /, "").replace(/\\n/g, "\n"),
           type: RowType.Checklist,
         };
       }
@@ -51,15 +51,15 @@ function parseMarkdown(text: string): TableData {
     });
 
   const maxDepth = Math.max(...lines.map((row) => row.depth));
-  const createRow = (): Row => {
+  const createRow = (): TableRow => {
     return {
       type: RowType.Text,
       columns: times(maxDepth).map((i) => ({ text: "" })),
     };
   };
-  const rows: Row[] = [];
-  let currentRow: Row = createRow();
-  let previousRow: Row | null = null;
+  const rows: TableRow[] = [];
+  let currentRow: TableRow = createRow();
+  let previousRow: TableRow | null = null;
   for (const line of lines) {
     if (line.type === RowType.Checklist) {
       currentRow.columns[maxDepth] = { text: line.text };
@@ -77,6 +77,28 @@ function parseMarkdown(text: string): TableData {
   };
 }
 
+export function stringifyMarkdown(table: TableData): string {
+  const maxDepth = table.header.length - 1;
+  console.log("[table]", table.rows);
+  return table.rows
+    .map((row) => {
+      const text = row.columns
+        .map((column, i) => {
+          if (column.text === "") {
+            return null;
+          }
+          if (i === maxDepth) {
+            return `- [ ] ${column.text.replace(/\n/g, "\\n")}`;
+          }
+          return `${"#".repeat(i + 1)} ${column.text}`;
+        })
+        .filter((v) => v !== null)
+        .join("\n");
+      return text;
+    })
+    .join("\n");
+}
+
 export function transformMarkdownToTable(text: string): string {
   const table = parseMarkdown(text);
 
@@ -87,7 +109,10 @@ export function transformMarkdownToTable(text: string): string {
     header,
     separator,
     ...table.rows.map(
-      (row) => `| ${row.columns.map((column) => column.text).join(" | ")} |`
+      (row) =>
+        `| ${row.columns
+          .map((column) => column.text.replace(/\n/g, "<br/>"))
+          .join(" | ")} |`
     ),
   ].join("\n");
 }
