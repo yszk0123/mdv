@@ -57,13 +57,13 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('mdv.showPreviewToSide', () => {
       if (currentPanel) {
-        currentPanel.reveal(vscode.ViewColumn.One);
+        currentPanel.reveal(vscode.ViewColumn.Two);
         return;
       }
 
       currentDocument = vscode.window.activeTextEditor?.document;
 
-      currentPanel = vscode.window.createWebviewPanel('webview', 'Webview', vscode.ViewColumn.One, {
+      currentPanel = vscode.window.createWebviewPanel('webview', 'Webview', vscode.ViewColumn.Two, {
         enableScripts: true,
       });
       const scriptSrc = currentPanel.webview.asWebviewUri(
