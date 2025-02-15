@@ -1,4 +1,4 @@
-import { useMemo, type JSX } from "react";
+import { useCallback, useMemo, type JSX } from "react";
 
 import {
   Table,
@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import { parseMarkdown, stringifyMarkdown, type TableData } from "../parser";
 import { useForm } from "@tanstack/react-form";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 export function TableView({
@@ -25,9 +24,16 @@ export function TableView({
   const form = useForm<TableData>({
     defaultValues: tableData,
     onSubmit: (values) => {
+      values.formApi.reset(values.value);
       onSubmit(stringifyMarkdown(values.value));
     },
   });
+  const handleBlur = useCallback(() => {
+    if (form.state.isDirty) {
+      form.reset(form.state.values);
+      onSubmit(stringifyMarkdown(form.state.values));
+    }
+  }, [form, onSubmit]);
 
   return (
     <form
@@ -58,6 +64,7 @@ export function TableView({
                     {(field) => (
                       <Textarea
                         value={field.state.value}
+                        onBlur={handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                       />
                     )}
@@ -68,7 +75,6 @@ export function TableView({
           ))}
         </TableBody>
       </Table>
-      <Button type="submit">変更を Markdown に反映</Button>
     </form>
   );
 }
