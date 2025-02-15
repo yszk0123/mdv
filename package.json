@@ -24,7 +24,9 @@
     "test": "vitest",
     "check": "biome check",
     "deploy:vscode": "npm run --workspace vscode-mdv deploy",
-    "version": "sh -c 'npm version --workspaces --include-workspace-root ${0} && git add package.json packages/*/package.json'"
+    "version:patch": "./scripts/version.sh patch",
+    "version:minor": "./scripts/version.sh minor",
+    "version:major": "./scripts/version.sh major"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
