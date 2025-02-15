@@ -98,6 +98,18 @@ test.each<TestCase>([
       |  | Title 2 | Item 2 |
     `),
   },
+  {
+    title: 'newlines in checklist items should be escaped',
+    input: stripCommonIndent(`
+      # Title 1
+      - [ ] Item 1\\nwith newline
+    `),
+    expected: stripCommonIndent(`
+      | 項目1 | 項目2 |
+      | --- | --- |
+      | Title 1 | Item 1<br/>with newline |
+    `),
+  },
 ])('$title', ({ input, expected }) => {
   expect(transformMarkdownToTable(input)).toBe(expected);
 });

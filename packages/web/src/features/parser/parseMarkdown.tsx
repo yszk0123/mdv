@@ -8,6 +8,10 @@ function repeatWithFn<T>(n: number, fn: (index: number) => T): T[] {
   return Array.from({ length: n }, (_, i) => fn(i));
 }
 
+function parseText(s: string): string {
+  return s.replace(/\\n/g, '\n');
+}
+
 export function parseMarkdown(text: string): TableData {
   let prevDepth = 0;
   const lines: Line[] = text
@@ -15,16 +19,15 @@ export function parseMarkdown(text: string): TableData {
     .filter((line) => line.startsWith('#') || line.startsWith('- [ ]'))
     .map((line) => {
       const depth = (line.match(/#+/)?.[0].length || 1) - 1;
-      const text = line.replace(/^#+ /, '');
-      if (/^- \[ \] /.test(text)) {
+      if (/^- \[ \] /.test(line)) {
         return {
           depth: prevDepth + 1,
-          text: text.replace(/- \[ \] /, '').replace(/\\n/g, '\n'),
+          text: parseText(line.replace(/- \[ \] /, '')),
           type: RowType.Checklist,
         };
       }
       prevDepth = depth;
-      return { depth, text, type: RowType.Text };
+      return { depth, text: parseText(line.replace(/^#+ /, '')), type: RowType.Text };
     });
 
   const maxDepth = Math.max(...lines.map((row) => row.depth));
