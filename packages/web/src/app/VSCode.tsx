@@ -1,17 +1,22 @@
-import { type JSX, useEffect, useState } from 'react';
+import { TableView } from '@/features/table';
+import type { VscodeMessage, WebviewMessage } from '@mdv/core';
+import { type JSX, useCallback, useEffect, useMemo, useState } from 'react';
 import { Markdown } from '../features/markdown';
 import { transformMarkdownToTable } from '../features/parser';
 
-type MesssageData = {
-  command: 'update';
-  text: string;
-};
+const vscode = acquireVsCodeApi();
 
 export function VSCode(): JSX.Element {
   const [text, setText] = useState('');
+  const tableText = useMemo(() => transformMarkdownToTable(text), [text]);
 
   useEffect(() => {
-    const onMessage = (event: MessageEvent<MesssageData>): void => {
+    const message: WebviewMessage = { command: 'initialize' };
+    vscode.postMessage(message);
+  }, []);
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent<VscodeMessage>): void => {
       const message = event.data;
       switch (message.command) {
         case 'update': {
@@ -31,9 +36,19 @@ export function VSCode(): JSX.Element {
     };
   }, []);
 
+  const handleSubmit = useCallback((text: string) => {
+    const message: WebviewMessage = { command: 'update', text };
+    vscode.postMessage(message);
+  }, []);
+
   return (
-    <div className="m-4 bg-background">
-      <Markdown text={transformMarkdownToTable(text)} />
+    <div className="flex flex-col gap-4 bg-background">
+      <div className="m-4">
+        <Markdown text={tableText} />
+      </div>
+      <div className="m-4">
+        <TableView text={text} onSubmit={handleSubmit} />
+      </div>
     </div>
   );
 }

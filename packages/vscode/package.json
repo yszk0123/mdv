@@ -1,8 +1,22 @@
 {
-  "name": "@mdv/vscode",
+  "private": true,
+  "name": "vscode-mdv",
   "displayName": "mdv",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "main": "./dist/extension.cjs",
+  "homepage": "https://github.com/yszk0123/mdv",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yszk0123/mdv"
+  },
+  "keywords": [],
+  "author": "Yuji Suzuki",
+  "publisher": "yszk0123",
+  "bugs": {
+    "url": "https://github.com/yszk0123/mdv/issues"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.97.0"
   },
@@ -12,28 +26,39 @@
   "activationEvents": [
     "onLanguage:markdown"
   ],
-  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "mdv.helloWorld",
-        "title": "Hello World"
+        "command": "mdv.showPreviewToSide",
+        "title": "Show mdv Preview to the Side"
+      },
+      {
+        "command": "mdv.closePreview",
+        "title": "Close mdv Preview"
       }
     ]
   },
+  "type": "module",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "clean": "rm -rf dist",
+    "compile": "npm run clean && node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
     "pretest": "npm run compile && npm run lint",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "package": "npm run clean && node esbuild.mjs --production && npm run --workspace @mdv/web build:vscode && vsce package --no-dependencies",
+    "deploy": "npm run package && vsce publish --no-dependencies"
+  },
+  "dependencies": {
+    "@mdv/core": "*"
   },
   "devDependencies": {
-    "@types/vscode": "^1.97.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "typescript": "^5.7.3",
+    "@types/vscode": "^1.97.0",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^3.2.2",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.3"
   }
 }
