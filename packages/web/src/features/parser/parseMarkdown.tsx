@@ -36,12 +36,10 @@ export function parseMarkdown(text: string): TableData {
   };
   const rows: TableRow[] = [];
   let currentRow: TableRow = createRow();
-  let previousRow: TableRow | null = null;
   for (const line of lines) {
     if (line.type === RowType.Checklist) {
       currentRow.columns[maxDepth] = { text: line.text };
       rows.push(currentRow);
-      previousRow = currentRow;
       currentRow = createRow();
     } else {
       currentRow.columns[line.depth] = { text: line.text };
