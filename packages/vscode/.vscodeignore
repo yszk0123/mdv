@@ -1,11 +1,15 @@
+.github/**
 .vscode/**
 .vscode-test/**
 src/**
 .gitignore
 .yarnrc
+.DS_Store
 vsc-extension-quickstart.md
+**/node_modules/**
 **/tsconfig.json
 **/eslint.config.mjs
+**/esbuild.*
 **/*.map
 **/*.ts
 **/.vscode-test.*

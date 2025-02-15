@@ -1,8 +1,22 @@
 {
-  "name": "@mdv/vscode",
+  "private": true,
+  "name": "vscode-mdv",
   "displayName": "mdv",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.0",
+  "main": "./dist/extension.cjs",
+  "homepage": "https://github.com/yszk0123/mdv",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yszk0123/mdv"
+  },
+  "keywords": [],
+  "author": "Yuji Suzuki",
+  "publisher": "yszk0123",
+  "bugs": {
+    "url": "https://github.com/yszk0123/mdv/issues"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.97.0"
   },
@@ -12,27 +26,27 @@
   "activationEvents": [
     "onLanguage:markdown"
   ],
-  "type": "module",
-  "main": "./out/extension.cjs",
   "contributes": {
     "commands": [
       {
         "command": "mdv.showPreviewToSide",
-        "title": "Show Preview to the Side"
+        "title": "Show mdv Preview to the Side"
       },
       {
         "command": "mdv.closePreview",
-        "title": "Close Preview"
+        "title": "Close mdv Preview"
       }
     ]
   },
+  "type": "module",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "node esbuild.mjs",
+    "clean": "rm -rf dist",
+    "compile": "npm run clean && node esbuild.mjs",
     "watch": "node esbuild.mjs --watch",
     "pretest": "npm run compile && npm run lint",
     "test": "vscode-test",
-    "package": "node esbuild.mjs --production"
+    "package": "npm run clean && node esbuild.mjs --production && npm run --workspace @mdv/web build:vscode && vsce package --no-dependencies",
+    "publish:vsce": "npm run package && vsce publish --no-dependencies"
   },
   "dependencies": {
     "@mdv/core": "*"

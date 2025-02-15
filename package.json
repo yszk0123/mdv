@@ -3,23 +3,27 @@
   "name": "mdv",
   "version": "0.0.0",
   "description": "",
+  "homepage": "https://github.com/yszk0123/mdv",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yszk0123/mdv"
+  },
+  "keywords": [],
+  "author": "Yuji Suzuki",
+  "bugs": {
+    "url": "https://github.com/yszk0123/mdv/issues"
+  },
+  "license": "MIT",
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "dev": "npm run --workspace @mdv/web dev",
     "build": "npm run --workspace @mdv/web build",
     "vscode:webview": "npm run --workspace @mdv/web build:vscode",
-    "vscode:dev": "npm run --workspace @mdv/vscode watch",
+    "vscode:dev": "npm run --workspace vscode-mdv watch",
     "test": "vitest",
     "check": "biome check"
   },
-  "sideEffects": false,
-  "bugs": {
-    "url": "https://github.com/yszk0123/mdv/issues"
-  },
-  "homepage": "https://github.com/yszk0123/mdv",
-  "keywords": [],
-  "author": "Yuji Suzuki",
-  "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^22.13.2",

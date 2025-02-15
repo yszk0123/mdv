@@ -12,7 +12,7 @@ async function main() {
     sourcemap: !production,
     sourcesContent: false,
     platform: 'node',
-    outfile: 'out/extension.cjs',
+    outfile: 'dist/extension.cjs',
     external: ['vscode'],
     logLevel: 'warning',
     plugins: [
