@@ -22,7 +22,9 @@
     "vscode:webview": "npm run --workspace @mdv/web build:vscode",
     "vscode:dev": "npm run --workspace vscode-mdv watch",
     "test": "vitest",
-    "check": "biome check"
+    "check": "biome check",
+    "deploy:vscode": "npm run --workspace vscode-mdv deploy",
+    "version": "sh -c 'npm version --workspaces --include-workspace-root ${0} && git add package.json packages/*/package.json'"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

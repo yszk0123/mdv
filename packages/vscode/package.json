@@ -46,7 +46,7 @@
     "pretest": "npm run compile && npm run lint",
     "test": "vscode-test",
     "package": "npm run clean && node esbuild.mjs --production && npm run --workspace @mdv/web build:vscode && vsce package --no-dependencies",
-    "publish:vsce": "npm run package && vsce publish --no-dependencies"
+    "deploy": "npm run package && vsce publish --no-dependencies"
   },
   "dependencies": {
     "@mdv/core": "*"
