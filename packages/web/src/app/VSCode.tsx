@@ -1,8 +1,8 @@
+import { TableView } from '@/features/table';
 import type { VscodeMessage, WebviewMessage } from '@mdv/core';
 import { type JSX, useCallback, useEffect, useMemo, useState } from 'react';
 import { Markdown } from '../features/markdown';
 import { transformMarkdownToTable } from '../features/parser';
-import { TableView } from '@/features/table';
 
 const vscode = acquireVsCodeApi();
 
