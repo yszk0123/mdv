@@ -4,15 +4,19 @@ import * as vscode from 'vscode';
 const DEBOUNCE_DELAY = 500;
 
 function createWebviewContent({
+  cspSource,
   cssSrc,
   scriptSrc,
 }: {
+  cspSource: string;
   cssSrc: vscode.Uri;
   scriptSrc: vscode.Uri;
 }): string {
   return `<!DOCTYPE html>
     <html lang="en">
       <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${cspSource}; style-src ${cspSource};">
         <link rel="stylesheet" href="${cssSrc}" />
       </head>
       <body>
@@ -63,16 +67,17 @@ export function activate(context: vscode.ExtensionContext) {
 
       currentDocument = vscode.window.activeTextEditor?.document;
 
+      const scriptSrc = vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.js');
+      const cssSrc = vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.css');
       currentPanel = vscode.window.createWebviewPanel('webview', 'Webview', vscode.ViewColumn.Two, {
         enableScripts: true,
+        localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview')],
       });
-      const scriptSrc = currentPanel.webview.asWebviewUri(
-        vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.js'),
-      );
-      const cssSrc = currentPanel.webview.asWebviewUri(
-        vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.css'),
-      );
-      currentPanel.webview.html = createWebviewContent({ cssSrc, scriptSrc });
+      currentPanel.webview.html = createWebviewContent({
+        cspSource: currentPanel.webview.cspSource,
+        cssSrc: currentPanel.webview.asWebviewUri(cssSrc),
+        scriptSrc: currentPanel.webview.asWebviewUri(scriptSrc),
+      });
       currentPanel.webview.onDidReceiveMessage((message: WebviewMessage) => {
         switch (message.command) {
           case 'initialize': {
