@@ -1,4 +1,4 @@
-import type { TableData } from "./type";
+import type { TableData } from './type';
 
 export function stringifyMarkdown(table: TableData): string {
   const maxDepth = table.header.length - 1;
@@ -6,17 +6,17 @@ export function stringifyMarkdown(table: TableData): string {
     .map((row) => {
       const text = row.columns
         .map((column, i) => {
-          if (column.text === "") {
+          if (column.text === '') {
             return null;
           }
           if (i === maxDepth) {
-            return `- [ ] ${column.text.replace(/\n/g, "\\n")}`;
+            return `- [ ] ${column.text.replace(/\n/g, '\\n')}`;
           }
-          return `${"#".repeat(i + 1)} ${column.text}`;
+          return `${'#'.repeat(i + 1)} ${column.text}`;
         })
         .filter((v) => v !== null)
-        .join("\n");
+        .join('\n');
       return text;
     })
-    .join("\n");
+    .join('\n');
 }

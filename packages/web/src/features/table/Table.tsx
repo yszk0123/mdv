@@ -1,4 +1,4 @@
-import { useCallback, useMemo, type JSX } from "react";
+import { type JSX, useCallback, useMemo } from 'react';
 
 import {
   Table,
@@ -7,10 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { parseMarkdown, stringifyMarkdown, type TableData } from "../parser";
-import { useForm } from "@tanstack/react-form";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/table';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from '@tanstack/react-form';
+import { type TableData, parseMarkdown, stringifyMarkdown } from '../parser';
 
 export function TableView({
   text,
@@ -55,10 +55,7 @@ export function TableView({
             <TableRow key={`${i}-${row.type}`}>
               {row.columns.map((column, j) => (
                 <TableCell key={`${j}-${column.text}`}>
-                  <form.Field
-                    name={`rows[${i}].columns[${j}].text`}
-                    mode="array"
-                  >
+                  <form.Field name={`rows[${i}].columns[${j}].text`} mode="array">
                     {(field) => (
                       <Textarea
                         value={field.state.value}

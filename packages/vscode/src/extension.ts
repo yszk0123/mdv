@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 
 function createWebviewContent({
   cssSrc,
@@ -25,28 +25,20 @@ export function activate(context: vscode.ExtensionContext) {
   let currentPanel: vscode.WebviewPanel | undefined = undefined;
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("mdv.helloWorld", () => {
+    vscode.commands.registerCommand('mdv.helloWorld', () => {
       if (currentPanel) {
         currentPanel.reveal(vscode.ViewColumn.One);
         return;
       }
 
-      currentPanel = vscode.window.createWebviewPanel(
-        "webview",
-        "Webview",
-        vscode.ViewColumn.One,
-        { enableScripts: true }
-      );
+      currentPanel = vscode.window.createWebviewPanel('webview', 'Webview', vscode.ViewColumn.One, {
+        enableScripts: true,
+      });
       const scriptSrc = currentPanel.webview.asWebviewUri(
-        vscode.Uri.joinPath(context.extensionUri, "dist", "webview", "index.js")
+        vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.js'),
       );
       const cssSrc = currentPanel.webview.asWebviewUri(
-        vscode.Uri.joinPath(
-          context.extensionUri,
-          "dist",
-          "webview",
-          "index.css"
-        )
+        vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.css'),
       );
       currentPanel.webview.html = createWebviewContent({ cssSrc, scriptSrc });
       currentPanel.onDidDispose(
@@ -54,9 +46,9 @@ export function activate(context: vscode.ExtensionContext) {
           currentPanel = undefined;
         },
         undefined,
-        context.subscriptions
+        context.subscriptions,
       );
-    })
+    }),
   );
 
   context.subscriptions.push(
@@ -65,8 +57,8 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
       const text = e.document.getText();
-      currentPanel.webview.postMessage({ command: "update", text });
-    })
+      currentPanel.webview.postMessage({ command: 'update', text });
+    }),
   );
 }
 

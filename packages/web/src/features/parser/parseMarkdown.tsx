@@ -1,4 +1,4 @@
-import { type TableData, type Line, RowType, type TableRow } from "./type";
+import { type Line, RowType, type TableData, type TableRow } from './type';
 
 function times(n: number): number[] {
   return Array.from({ length: n }, (_, i) => i);
@@ -11,15 +11,15 @@ function repeatWithFn<T>(n: number, fn: (index: number) => T): T[] {
 export function parseMarkdown(text: string): TableData {
   let prevDepth = 0;
   const lines: Line[] = text
-    .split("\n")
-    .filter((line) => line.startsWith("#") || line.startsWith("- [ ]"))
+    .split('\n')
+    .filter((line) => line.startsWith('#') || line.startsWith('- [ ]'))
     .map((line) => {
       const depth = (line.match(/#+/)?.[0].length || 1) - 1;
-      const text = line.replace(/^#+ /, "");
+      const text = line.replace(/^#+ /, '');
       if (/^- \[ \] /.test(text)) {
         return {
           depth: prevDepth + 1,
-          text: text.replace(/- \[ \] /, "").replace(/\\n/g, "\n"),
+          text: text.replace(/- \[ \] /, '').replace(/\\n/g, '\n'),
           type: RowType.Checklist,
         };
       }
@@ -31,7 +31,7 @@ export function parseMarkdown(text: string): TableData {
   const createRow = (): TableRow => {
     return {
       type: RowType.Text,
-      columns: times(maxDepth).map((i) => ({ text: "" })),
+      columns: times(maxDepth).map((i) => ({ text: '' })),
     };
   };
   const rows: TableRow[] = [];
@@ -49,7 +49,7 @@ export function parseMarkdown(text: string): TableData {
   }
   return {
     header: repeatWithFn(maxDepth + 1, (i) => `項目${i + 1}`),
-    separator: repeatWithFn(maxDepth + 1, () => "---"),
+    separator: repeatWithFn(maxDepth + 1, () => '---'),
     rows,
   };
 }

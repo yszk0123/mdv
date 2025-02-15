@@ -4,9 +4,9 @@ export interface Line {
   type: RowType;
 }
 export const RowType = {
-  Text: "text",
-  Checklist: "checklist",
-  Ordered: "ordered",
+  Text: 'text',
+  Checklist: 'checklist',
+  Ordered: 'ordered',
 } as const;
 export type RowType = (typeof RowType)[keyof typeof RowType];
 interface TableColumn {

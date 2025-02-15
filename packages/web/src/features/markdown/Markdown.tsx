@@ -1,11 +1,11 @@
-import { Children, type JSX } from "react";
-import "./Markdown.css";
+import { Children, type JSX } from 'react';
+import './Markdown.css';
 
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 function replaceBr(v: React.ReactNode): React.ReactNode {
-  return typeof v === "string" && /<br\s*\/?>/.test(v) ? <br /> : v;
+  return typeof v === 'string' && /<br\s*\/?>/.test(v) ? <br /> : v;
 }
 
 export function Markdown({ text }: { text: string }): JSX.Element {

@@ -1,20 +1,20 @@
-import { useEffect, useState, type JSX } from "react";
-import { Markdown } from "../features/markdown";
-import { transformMarkdownToTable } from "../features/parser";
+import { type JSX, useEffect, useState } from 'react';
+import { Markdown } from '../features/markdown';
+import { transformMarkdownToTable } from '../features/parser';
 
 type MesssageData = {
-  command: "update";
+  command: 'update';
   text: string;
 };
 
 export function VSCode(): JSX.Element {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
 
   useEffect(() => {
     const onMessage = (event: MessageEvent<MesssageData>): void => {
       const message = event.data;
       switch (message.command) {
-        case "update": {
+        case 'update': {
           setText(message.text);
           return;
         }
@@ -24,10 +24,10 @@ export function VSCode(): JSX.Element {
         }
       }
     };
-    window.addEventListener("message", onMessage);
+    window.addEventListener('message', onMessage);
 
     return () => {
-      window.removeEventListener("message", onMessage);
+      window.removeEventListener('message', onMessage);
     };
   }, []);
 

@@ -1,10 +1,10 @@
-import "./common.css";
+import './common.css';
 
-import { createRoot } from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 
-import { Web } from "./app/Web";
+import { Web } from './app/Web';
 
-const element = document.getElementById("app");
+const element = document.getElementById('app');
 if (element) {
   createRoot(element).render(<Web />);
 }
