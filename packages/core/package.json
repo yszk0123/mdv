@@ -1,0 +1,38 @@
+{
+  "name": "@mdv/core",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "dev:vscode": "vite dev --config vite.vscode.config.mts",
+    "build:vscode": "vite build --config vite.vscode.config.mts",
+    "preview": "vite preview",
+    "test": "vitest",
+    "check": "biome check"
+  },
+  "sideEffects": false,
+  "bugs": {
+    "url": "https://github.com/yszk0123/mdv/issues"
+  },
+  "homepage": "https://github.com/yszk0123/mdv",
+  "keywords": [],
+  "author": "Yuji Suzuki",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.2",
+    "typescript": "^5.7.3"
+  }
+}

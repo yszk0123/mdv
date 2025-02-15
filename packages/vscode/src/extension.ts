@@ -1,3 +1,4 @@
+import type { VscodeMessage, WebviewMessage } from '@mdv/core';
 import * as vscode from 'vscode';
 
 function createWebviewContent({
@@ -21,15 +22,24 @@ function createWebviewContent({
   `;
 }
 
+function update(document: vscode.TextDocument, panel: vscode.WebviewPanel) {
+  const text = document.getText();
+  const message: VscodeMessage = { command: 'update', text };
+  panel.webview.postMessage(message);
+}
+
 export function activate(context: vscode.ExtensionContext) {
   let currentPanel: vscode.WebviewPanel | undefined = undefined;
+  let currentDocument: vscode.TextDocument | undefined = undefined;
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('mdv.helloWorld', () => {
+    vscode.commands.registerCommand('mdv.showPreviewToSide', () => {
       if (currentPanel) {
         currentPanel.reveal(vscode.ViewColumn.One);
         return;
       }
+
+      currentDocument = vscode.window.activeTextEditor?.document;
 
       currentPanel = vscode.window.createWebviewPanel('webview', 'Webview', vscode.ViewColumn.One, {
         enableScripts: true,
@@ -41,9 +51,36 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview', 'index.css'),
       );
       currentPanel.webview.html = createWebviewContent({ cssSrc, scriptSrc });
+      currentPanel.webview.onDidReceiveMessage((message: WebviewMessage) => {
+        switch (message.command) {
+          case 'initialize': {
+            if (currentDocument != null && currentPanel != null) {
+              update(currentDocument, currentPanel);
+            }
+            return;
+          }
+          case 'update': {
+            if (currentDocument) {
+              const edit = new vscode.WorkspaceEdit();
+              edit.replace(
+                currentDocument.uri,
+                new vscode.Range(0, 0, currentDocument.lineCount, 0),
+                message.text,
+              );
+              vscode.workspace.applyEdit(edit);
+            }
+            return;
+          }
+          default: {
+            message satisfies never;
+            throw new Error(`Unknown command: ${message}`);
+          }
+        }
+      });
       currentPanel.onDidDispose(
         () => {
           currentPanel = undefined;
+          currentDocument = undefined;
         },
         undefined,
         context.subscriptions,
@@ -52,12 +89,28 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.workspace.onDidChangeTextDocument((e) => {
-      if (currentPanel === undefined) {
-        return;
+    vscode.commands.registerCommand('mdv.closePreview', () => {
+      if (currentPanel) {
+        currentPanel.dispose();
+        currentPanel = undefined;
+        currentDocument = undefined;
       }
-      const text = e.document.getText();
-      currentPanel.webview.postMessage({ command: 'update', text });
+    }),
+  );
+
+  context.subscriptions.push(
+    vscode.workspace.onDidCloseTextDocument((document) => {
+      if (currentDocument === document) {
+        currentDocument = undefined;
+      }
+    }),
+  );
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeTextDocument((e) => {
+      if (currentPanel != null && currentDocument != null && currentDocument === e.document) {
+        update(currentDocument, currentPanel);
+      }
     }),
   );
 }
