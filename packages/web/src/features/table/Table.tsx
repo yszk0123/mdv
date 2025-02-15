@@ -3,7 +3,6 @@ import { useCallback, useMemo, type JSX } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -44,7 +43,6 @@ export function TableView({
       }}
     >
       <Table>
-        <TableCaption>Inline Edit (WIP)</TableCaption>
         <TableHeader>
           <TableRow>
             {tableData.header.map((item, i) => (
