@@ -1,6 +1,8 @@
 import type { VscodeMessage, WebviewMessage } from '@mdv/core';
 import * as vscode from 'vscode';
 
+const DEBOUNCE_DELAY = 500;
+
 function createWebviewContent({
   cssSrc,
   scriptSrc,
@@ -26,6 +28,26 @@ function update(document: vscode.TextDocument, panel: vscode.WebviewPanel) {
   const text = document.getText();
   const message: VscodeMessage = { command: 'update', text };
   panel.webview.postMessage(message);
+}
+
+function debounce<T extends unknown[]>(
+  fn: (...args: T) => void,
+  delay: number,
+): (...args: T) => () => void {
+  let timeout: NodeJS.Timeout | undefined = undefined;
+  const cleanup = (): void => {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = undefined;
+    }
+  };
+  return (...args: T) => {
+    cleanup();
+    timeout = setTimeout(() => {
+      fn(...args);
+    }, delay);
+    return cleanup;
+  };
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -106,13 +128,25 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  context.subscriptions.push(
-    vscode.workspace.onDidChangeTextDocument((e) => {
-      if (currentPanel != null && currentDocument != null && currentDocument === e.document) {
+  {
+    const debounced = debounce((document: vscode.TextDocument) => {
+      if (currentPanel != null && currentDocument != null && currentDocument === document) {
         update(currentDocument, currentPanel);
       }
-    }),
-  );
+    }, DEBOUNCE_DELAY);
+    let cleanup = (): void => {};
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeTextDocument((e) => {
+        cleanup = debounced(e.document);
+      }),
+    );
+    context.subscriptions.push({
+      dispose: () => {
+        cleanup();
+        cleanup = () => {};
+      },
+    });
+  }
 }
 
 export function deactivate() {}
