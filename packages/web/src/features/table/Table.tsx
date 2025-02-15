@@ -51,7 +51,10 @@ export function TableView({
             <TableRow key={`${i}-${row.type}`}>
               {row.columns.map((column, j) => (
                 <TableCell key={`${j}-${column.text}`}>
-                  <form.Field name={`rows[${i}].columns[${j}].text`}>
+                  <form.Field
+                    name={`rows[${i}].columns[${j}].text`}
+                    mode="array"
+                  >
                     {(field) => (
                       <Textarea
                         value={field.state.value}
