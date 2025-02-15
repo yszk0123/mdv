@@ -79,7 +79,6 @@ export function parseMarkdown(text: string): TableData {
 
 export function stringifyMarkdown(table: TableData): string {
   const maxDepth = table.header.length - 1;
-  console.log("[table]", table.rows);
   return table.rows
     .map((row) => {
       const text = row.columns
