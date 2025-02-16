@@ -1,74 +1,44 @@
 import { TableEdit } from '@/features/table/TableEdit';
-import type { JSX } from 'react';
-import { Textarea } from '../components/ui/textarea';
-import { Markdown } from '../features/markdown';
-import { Button } from '@/components/ui/button';
-import { EditIcon, EyeIcon } from 'lucide-react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useState, type JSX } from 'react';
 import { Mode } from './type';
-import { textAtom, tableTextAtom, modeAtom } from './state';
+import { stripCommonIndent } from '@/features/parser';
+import { TextEdit } from './components/TextEdit';
+import { EditButton } from './components/EditButton';
+import { MarkdownEdit } from './components/MarkdownEdit';
+import { ViewButton } from './components/ViewButton';
 
-function TextEditView(): JSX.Element {
-  const [text, setText] = useAtom(textAtom);
-
-  return <Textarea value={text} onChange={(e) => setText(e.currentTarget.value)} />;
-}
-
-function MarkdownView(): JSX.Element {
-  const tableText = useAtomValue(tableTextAtom);
-
-  return <Markdown text={tableText} />;
-}
-
-function TableEditView(): JSX.Element {
-  const [text, setText] = useAtom(textAtom);
-
-  return <TableEdit text={text} onSubmit={setText} />;
-}
-
-function ViewButton(): JSX.Element {
-  const setMode = useSetAtom(modeAtom);
-
-  return (
-    <Button onClick={() => setMode(Mode.View)}>
-      <EyeIcon />
-      View
-    </Button>
-  );
-}
-
-function EditButton(): JSX.Element {
-  const setMode = useSetAtom(modeAtom);
-
-  return (
-    <Button onClick={() => setMode(Mode.Edit)}>
-      <EditIcon />
-      Edit
-    </Button>
-  );
-}
+const INITIAL_TEXT = stripCommonIndent(`
+# 大項目
+## 中項目
+### 小項目1
+- [ ] 説明\\n説明
+- [ ] 説明\\n説明
+### 小項目2
+- [ ] 説明\\n説明
+`);
 
 export function Web(): JSX.Element {
-  const mode = useAtomValue(modeAtom);
+  const [mode, setMode] = useState<Mode>(Mode.View);
+  const [text, setText] = useState(INITIAL_TEXT);
 
   return (
     <div className="flex flex-col">
       <div className="m-4">
-        <TextEditView />
+        <TextEdit text={text} onChange={setText} />
       </div>
       <div className="flex flex-col gap-4 m-4">
         <div className="self-end">
           {
             {
-              [Mode.View]: <EditButton />,
-              [Mode.Edit]: <ViewButton />,
+              [Mode.View]: <EditButton onClick={() => setMode(Mode.Edit)} />,
+              [Mode.Edit]: <ViewButton onClick={() => setMode(Mode.View)} />,
             }[mode]
           }
         </div>
         {
           {
-            [Mode.View]: <MarkdownView />,
-            [Mode.Edit]: <TableEditView />,
+            [Mode.View]: <MarkdownEdit text={text} />,
+            [Mode.Edit]: <TableEdit text={text} onSubmit={setText} />,
           }[mode]
         }
       </div>
