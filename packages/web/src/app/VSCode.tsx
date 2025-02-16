@@ -10,7 +10,7 @@ const vscode = acquireVsCodeApi();
 
 export function VSCode(): JSX.Element {
   const [text, setText] = useState('');
-  const [mode, setMode] = useState<Mode>(Mode.View);
+  const [mode, setMode] = useState<Mode>(Mode.enum.View);
 
   useEffect(() => {
     const message: WebviewMessage = { command: 'initialize' };
@@ -49,15 +49,15 @@ export function VSCode(): JSX.Element {
         <div className="self-end">
           {
             {
-              [Mode.View]: <EditButton onClick={() => setMode(Mode.Edit)} />,
-              [Mode.Edit]: <ViewButton onClick={() => setMode(Mode.View)} />,
+              [Mode.enum.View]: <EditButton onClick={() => setMode(Mode.enum.Edit)} />,
+              [Mode.enum.Edit]: <ViewButton onClick={() => setMode(Mode.enum.View)} />,
             }[mode]
           }
         </div>
         {
           {
-            [Mode.View]: <MarkdownEdit text={text} />,
-            [Mode.Edit]: <TableEdit text={text} onSubmit={handleSubmit} />,
+            [Mode.enum.View]: <MarkdownEdit text={text} />,
+            [Mode.enum.Edit]: <TableEdit text={text} onSubmit={handleSubmit} />,
           }[mode]
         }
       </div>

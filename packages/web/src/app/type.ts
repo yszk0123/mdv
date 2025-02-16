@@ -1,5 +1,4 @@
-export const Mode = {
-  Edit: 'edit',
-  View: 'view',
-} as const;
-export type Mode = (typeof Mode)[keyof typeof Mode];
+import { z } from 'zod';
+
+export const Mode = z.enum(['View', 'Edit']);
+export type Mode = z.infer<typeof Mode>;
