@@ -11,7 +11,8 @@ test.each<{
     title: 'empty rows should return empty table',
     input: stripCommonIndent(''),
     expected: stripCommonIndent(`
-      |  |
+      | 項目1 |
+      | --- |
       |  |
     `),
   },
@@ -52,6 +53,7 @@ test.each<{
       | 項目1 | 項目2 | 項目3 |
       | --- | --- | --- |
       | Title 1 | Title 2 | Item 1 |
+      |  |  | Title 3 |
     `),
   },
   {
@@ -116,6 +118,18 @@ test.each<{
       |  | Checklist 2 |
       |  | Ordered 1 |
       |  | Ordered 2 |
+    `),
+  },
+  {
+    title: 'raw text should be ignored in table',
+    input: stripCommonIndent(`
+      <!-- comment -->
+      # Title 1
+    `),
+    expected: stripCommonIndent(`
+      | 項目1 |
+      | --- |
+      | Title 1 |
     `),
   },
 ])('$title', ({ input, expected }) => {

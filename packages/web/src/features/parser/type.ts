@@ -7,6 +7,7 @@ export const RowType = {
   Text: 'text',
   Checklist: 'checklist',
   Ordered: 'ordered',
+  Raw: 'raw',
 } as const;
 export type RowType = (typeof RowType)[keyof typeof RowType];
 export interface TableColumn {
@@ -14,6 +15,7 @@ export interface TableColumn {
 }
 export interface TableRow {
   type: RowType;
+  raws: string[];
   columns: TableColumn[];
 }
 export interface TableData {

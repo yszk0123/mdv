@@ -15,7 +15,6 @@ test.each<{
     title: 'single heading with single checklist should return single row',
     input: stripCommonIndent(`
       # Title 1
-
       - [ ] Item 1
     `),
   },
@@ -23,9 +22,7 @@ test.each<{
     title: 'nested headings with single checklist should return single row with multiple columns',
     input: stripCommonIndent(`
       # Title 1
-
       ## Title 2
-
       - [ ] Item 1
     `),
   },
@@ -33,9 +30,7 @@ test.each<{
     title: 'heading with empty checklist should be ignored',
     input: stripCommonIndent(`
       # Title 1
-
       ## Title 2
-
       - [ ] Item 1
     `),
   },
@@ -43,14 +38,11 @@ test.each<{
     title: 'nested headings with multiple checklists should return multiple rows',
     input: stripCommonIndent(`
       # Title 1
-
       ## Title 2
-
       - [ ] Item 1
       - [ ] Item 2
 
       # Title 3
-
       - [ ] Item 3
     `),
   },
@@ -58,11 +50,9 @@ test.each<{
     title: 'nested headings with nested checklists should return multiple rows',
     input: stripCommonIndent(`
       # Title 1
-
       - [ ] Item 1
 
       ## Title 2
-
       - [ ] Item 2
     `),
   },
@@ -70,7 +60,6 @@ test.each<{
     title: 'newlines in checklist items should be escaped',
     input: stripCommonIndent(`
       # Title 1
-
       - [ ] Item 1\\nwith newline
     `),
   },
@@ -78,14 +67,19 @@ test.each<{
     title: 'checklist and ordered list should be parsed correctly',
     input: stripCommonIndent(`
       # Title 1
-
       - [ ] Checklist 1
       - [ ] Checklist 2
       1. Ordered 1
       1. Ordered 2
     `),
   },
+  {
+    title: 'raw text should be preserved',
+    input: stripCommonIndent(`
+      <!-- comment -->
+      # Title 1
+    `),
+  },
 ])('$title', ({ input }) => {
-  stringifyMarkdown(parseMarkdown(input));
   expect(stringifyMarkdown(parseMarkdown(input))).toBe(input);
 });

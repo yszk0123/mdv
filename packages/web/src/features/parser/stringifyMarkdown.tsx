@@ -4,16 +4,19 @@ function stringifyText(s: string): string {
   return s.replace(/\n/g, '\\n');
 }
 
-function stringifyLastColumn(rowType: RowType, column: TableColumn): string {
+function stringifyLastColumn(rowType: RowType, column: TableColumn, depth: number): string {
   switch (rowType) {
     case RowType.Text: {
-      return stringifyText(column.text);
+      return `${'#'.repeat(depth + 1)} ${stringifyText(column.text)}`;
     }
     case RowType.Checklist: {
       return `- [ ] ${stringifyText(column.text)}`;
     }
     case RowType.Ordered: {
       return `1. ${stringifyText(column.text)}`;
+    }
+    case RowType.Raw: {
+      return column.text;
     }
     default: {
       rowType satisfies never;
@@ -32,13 +35,14 @@ export function stringifyMarkdown(table: TableData): string {
             return null;
           }
           if (i === maxDepth) {
-            return stringifyLastColumn(row.type, column);
+            return stringifyLastColumn(row.type, column, i);
           }
-          return `\n${'#'.repeat(i + 1)} ${stringifyText(column.text)}\n`;
+          return `${'#'.repeat(i + 1)} ${stringifyText(column.text)}`;
         })
         .filter((v) => v !== null)
         .join('\n');
-      return text;
+      const raws = row.raws.length ? row.raws.join('\n') : null;
+      return [raws, text].filter((v) => v !== null).join('\n');
     })
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
