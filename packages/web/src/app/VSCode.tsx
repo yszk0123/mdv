@@ -1,4 +1,4 @@
-import { TableView } from '@/features/table';
+import { TableEdit } from '@/features/table';
 import type { VscodeMessage, WebviewMessage } from '@mdv/core';
 import { type JSX, useCallback, useEffect, useMemo, useState } from 'react';
 import { Markdown } from '../features/markdown';
@@ -47,7 +47,7 @@ export function VSCode(): JSX.Element {
         <Markdown text={tableText} />
       </div>
       <div className="m-4">
-        <TableView text={text} onSubmit={handleSubmit} />
+        <TableEdit text={text} onSubmit={handleSubmit} />
       </div>
     </div>
   );

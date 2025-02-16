@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@tanstack/react-form';
 import { type TableData, parseMarkdown, stringifyMarkdown } from '../parser';
 
-export function TableView({
+export function TableEdit({
   text,
   onSubmit,
 }: {
