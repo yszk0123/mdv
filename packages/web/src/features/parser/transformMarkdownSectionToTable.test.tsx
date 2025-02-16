@@ -1,7 +1,5 @@
 import { expect, test } from 'vitest';
 import { transformMarkdownToTable } from './transformMarkdownSectionToTable';
-import { stringifyMarkdown } from './stringifyMarkdown';
-import { parseMarkdown } from './parseMarkdown';
 import { stripCommonIndent } from './stripCommonIndent';
 
 test.each<{
