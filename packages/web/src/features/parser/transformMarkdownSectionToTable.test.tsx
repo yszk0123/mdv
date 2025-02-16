@@ -1,23 +1,14 @@
 import { expect, test } from 'vitest';
 import { transformMarkdownToTable } from './transformMarkdownSectionToTable';
+import { stringifyMarkdown } from './stringifyMarkdown';
+import { parseMarkdown } from './parseMarkdown';
+import { stripCommonIndent } from './stripCommonIndent';
 
-interface TestCase {
+test.each<{
   title: string;
   input: string;
   expected: string;
-}
-
-function stripCommonIndent(text: string) {
-  const lines = text.replace(/^\n+/, '').trimEnd().split('\n');
-  const indent = Math.min(
-    ...lines
-      .filter((line) => line.trim() !== '')
-      .map((line) => line.match(/^\s*/)?.[0].length || 0),
-  );
-  return lines.map((line) => line.slice(indent)).join('\n');
-}
-
-test.each<TestCase>([
+}>([
   {
     title: 'empty rows should return empty table',
     input: stripCommonIndent(''),
@@ -112,4 +103,67 @@ test.each<TestCase>([
   },
 ])('$title', ({ input, expected }) => {
   expect(transformMarkdownToTable(input)).toBe(expected);
+});
+
+test.each<{
+  title: string;
+  input: string;
+}>([
+  {
+    title: 'empty rows should return empty table',
+    input: stripCommonIndent(''),
+  },
+  {
+    title: 'single heading with single checklist should return single row',
+    input: stripCommonIndent(`
+      # Title 1
+      - [ ] Item 1
+    `),
+  },
+  {
+    title: 'nested headings with single checklist should return single row with multiple columns',
+    input: stripCommonIndent(`
+      # Title 1
+      ## Title 2
+      - [ ] Item 1
+    `),
+  },
+  {
+    title: 'heading with empty checklist should be ignored',
+    input: stripCommonIndent(`
+      # Title 1
+      ## Title 2
+      - [ ] Item 1
+    `),
+  },
+  {
+    title: 'nested headings with multiple checklists should return multiple rows',
+    input: stripCommonIndent(`
+      # Title 1
+      ## Title 2
+      - [ ] Item 1
+      - [ ] Item 2
+      # Title 3
+      - [ ] Item 3
+    `),
+  },
+  {
+    title: 'nested headings with nested checklists should return multiple rows',
+    input: stripCommonIndent(`
+      # Title 1
+      - [ ] Item 1
+      ## Title 2
+      - [ ] Item 2
+    `),
+  },
+  {
+    title: 'newlines in checklist items should be escaped',
+    input: stripCommonIndent(`
+      # Title 1
+      - [ ] Item 1\\nwith newline
+    `),
+  },
+])('$title', ({ input }) => {
+  stringifyMarkdown(parseMarkdown(input));
+  expect(stringifyMarkdown(parseMarkdown(input))).toBe(input);
 });
