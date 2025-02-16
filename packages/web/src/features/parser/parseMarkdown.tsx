@@ -12,11 +12,13 @@ function parseText(s: string): string {
   return s.replace(/\\n/g, '\n');
 }
 
+const MARKDOWN_PATTERN = /^(?:#+|- \[ \]|\d+\.) /;
+
 export function parseMarkdown(text: string): TableData {
   let prevDepth = 0;
   const lines: Line[] = text
     .split('\n')
-    .filter((line) => line.startsWith('#') || line.startsWith('- [ ]'))
+    .filter((line) => MARKDOWN_PATTERN.test(line))
     .map((line) => {
       const depth = (line.match(/#+/)?.[0].length || 1) - 1;
       if (/^- \[ \] /.test(line)) {
@@ -24,6 +26,13 @@ export function parseMarkdown(text: string): TableData {
           depth: prevDepth + 1,
           text: parseText(line.replace(/- \[ \] /, '')),
           type: RowType.Checklist,
+        };
+      }
+      if (/^\d+\. /.test(line)) {
+        return {
+          depth: prevDepth + 1,
+          text: parseText(line.replace(/^\d+\. /, '')),
+          type: RowType.Ordered,
         };
       }
       prevDepth = depth;
@@ -40,12 +49,23 @@ export function parseMarkdown(text: string): TableData {
   const rows: TableRow[] = [];
   let currentRow: TableRow = createRow();
   for (const line of lines) {
-    if (line.type === RowType.Checklist) {
-      currentRow.columns[maxDepth] = { text: line.text };
-      rows.push(currentRow);
-      currentRow = createRow();
-    } else {
-      currentRow.columns[line.depth] = { text: line.text };
+    switch (line.type) {
+      case RowType.Text: {
+        currentRow.columns[line.depth] = { text: line.text };
+        break;
+      }
+      case RowType.Checklist:
+      case RowType.Ordered: {
+        currentRow.type = line.type;
+        currentRow.columns[maxDepth] = { text: line.text };
+        rows.push(currentRow);
+        currentRow = createRow();
+        break;
+      }
+      default: {
+        line.type satisfies never;
+        break;
+      }
     }
   }
   return {

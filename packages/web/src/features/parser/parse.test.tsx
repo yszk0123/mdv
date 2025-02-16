@@ -74,6 +74,17 @@ test.each<{
       - [ ] Item 1\\nwith newline
     `),
   },
+  {
+    title: 'checklist and ordered list should be parsed correctly',
+    input: stripCommonIndent(`
+      # Title 1
+
+      - [ ] Checklist 1
+      - [ ] Checklist 2
+      1. Ordered 1
+      1. Ordered 2
+    `),
+  },
 ])('$title', ({ input }) => {
   stringifyMarkdown(parseMarkdown(input));
   expect(stringifyMarkdown(parseMarkdown(input))).toBe(input);

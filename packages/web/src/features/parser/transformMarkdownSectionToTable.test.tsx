@@ -99,6 +99,25 @@ test.each<{
       | Title 1 | Item 1<br/>with newline |
     `),
   },
+  {
+    title: 'checklist and ordered list should be parsed correctly',
+    input: stripCommonIndent(`
+      # Title 1
+
+      - [ ] Checklist 1
+      - [ ] Checklist 2
+      1. Ordered 1
+      1. Ordered 2
+    `),
+    expected: stripCommonIndent(`
+      | 項目1 | 項目2 |
+      | --- | --- |
+      | Title 1 | Checklist 1 |
+      |  | Checklist 2 |
+      |  | Ordered 1 |
+      |  | Ordered 2 |
+    `),
+  },
 ])('$title', ({ input, expected }) => {
   expect(transformMarkdownToTable(input)).toBe(expected);
 });

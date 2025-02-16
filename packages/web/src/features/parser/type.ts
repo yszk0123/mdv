@@ -9,7 +9,7 @@ export const RowType = {
   Ordered: 'ordered',
 } as const;
 export type RowType = (typeof RowType)[keyof typeof RowType];
-interface TableColumn {
+export interface TableColumn {
   text: string;
 }
 export interface TableRow {
