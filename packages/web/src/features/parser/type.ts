@@ -1,21 +1,23 @@
 export interface Line {
   depth: number;
   text: string;
+  heading: string;
+  trailing: string;
   type: RowType;
 }
 export const RowType = {
   Text: 'text',
   Checklist: 'checklist',
   Ordered: 'ordered',
-  Raw: 'raw',
 } as const;
 export type RowType = (typeof RowType)[keyof typeof RowType];
 export interface TableColumn {
   text: string;
+  heading: string;
+  trailing: string;
 }
 export interface TableRow {
   type: RowType;
-  raws: string[];
   columns: TableColumn[];
 }
 export interface TableData {

@@ -15,9 +15,6 @@ function stringifyLastColumn(rowType: RowType, column: TableColumn, depth: numbe
     case RowType.Ordered: {
       return `1. ${stringifyText(column.text)}`;
     }
-    case RowType.Raw: {
-      return column.text;
-    }
     default: {
       rowType satisfies never;
       return column.text;
@@ -29,22 +26,19 @@ export function stringifyMarkdown(table: TableData): string {
   const maxDepth = table.header.length - 1;
   return table.rows
     .map((row) => {
-      const text = row.columns
+      return row.columns
         .map((column, i) => {
           if (column.text === '') {
             return null;
           }
           if (i === maxDepth) {
-            return stringifyLastColumn(row.type, column, i);
+            return `${column.heading}${stringifyLastColumn(row.type, column, i)}${column.trailing}`;
           }
-          return `${'#'.repeat(i + 1)} ${stringifyText(column.text)}`;
+          return `${column.heading}${'#'.repeat(i + 1)} ${stringifyText(column.text)}${column.trailing}`;
         })
         .filter((v) => v !== null)
         .join('\n');
-      const raws = row.raws.length ? row.raws.join('\n') : null;
-      return [raws, text].filter((v) => v !== null).join('\n');
     })
     .join('\n')
-    .replace(/\n{3,}/g, '\n\n')
     .trim();
 }

@@ -42,6 +42,7 @@ test.each<{
       - [ ] Item 1
       - [ ] Item 2
 
+
       # Title 3
       - [ ] Item 3
     `),
@@ -74,10 +75,43 @@ test.each<{
     `),
   },
   {
-    title: 'raw text should be preserved',
+    title: 'preserve blank lines',
     input: stripCommonIndent(`
-      <!-- comment -->
       # Title 1
+
+      ## Title 2
+
+
+      - [ ] Item 1
+    `),
+  },
+  {
+    title: 'preserve heading raw text',
+    input: stripCommonIndent(`
+      heding 1
+      heding 2
+
+      # Title 1
+    `),
+  },
+  {
+    title: 'preserve trailing raw text',
+    input: stripCommonIndent(`
+      # Title 1
+
+      trailing 1
+      trailing 2
+    `),
+  },
+  {
+    title: 'preserve other raw text',
+    input: stripCommonIndent(`
+      # Title 1
+      - [ ] Item 1
+      raw text 1
+      - [ ] Item 2
+      raw text 2
+      # Title 2
     `),
   },
 ])('$title', ({ input }) => {

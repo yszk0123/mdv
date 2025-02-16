@@ -10,11 +10,7 @@ test.each<{
   {
     title: 'empty rows should return empty table',
     input: stripCommonIndent(''),
-    expected: stripCommonIndent(`
-      | 項目1 |
-      | --- |
-      |  |
-    `),
+    expected: stripCommonIndent(''),
   },
   {
     title: 'single heading with single checklist should return single row',

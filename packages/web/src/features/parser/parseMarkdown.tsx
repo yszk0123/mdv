@@ -12,38 +12,69 @@ function parseText(s: string): string {
   return s.replace(/\\n/g, '\n');
 }
 
-export function parseMarkdown(text: string): TableData {
+function parseLines(text: string): Line[] {
+  const lines: Line[] = [];
   let prevDepth = 0;
-  const lines: Line[] = text.split('\n').map((line) => {
+  let heading = '';
+  for (const line of text.split('\n')) {
     const depth = (line.match(/#+/)?.[0].length || 1) - 1;
-    if (/^- \[ \] /.test(line)) {
-      return {
-        depth: prevDepth + 1,
-        text: parseText(line.replace(/- \[ \] /, '')),
-        type: RowType.Checklist,
-      };
+    switch (true) {
+      case /^- \[ \] /.test(line): {
+        lines.push({
+          type: RowType.Checklist,
+          depth: prevDepth + 1,
+          text: parseText(line.replace(/- \[ \] /, '')),
+          heading,
+          trailing: '',
+        });
+        heading = '';
+        break;
+      }
+      case /^\d+\. /.test(line): {
+        lines.push({
+          type: RowType.Ordered,
+          depth: prevDepth + 1,
+          text: parseText(line.replace(/^\d+\. /, '')),
+          heading,
+          trailing: '',
+        });
+        heading = '';
+        break;
+      }
+      case /^#+ /.test(line): {
+        prevDepth = depth;
+        lines.push({
+          type: RowType.Text,
+          depth,
+          text: parseText(line.replace(/^#+ /, '')),
+          heading,
+          trailing: '',
+        });
+        heading = '';
+        break;
+      }
+      default: {
+        const currentLine = lines[lines.length - 1];
+        if (currentLine) {
+          currentLine.trailing += `\n${line}`;
+        } else {
+          heading = `${heading}${line}\n`;
+        }
+        break;
+      }
     }
-    if (/^\d+\. /.test(line)) {
-      return {
-        depth: prevDepth + 1,
-        text: parseText(line.replace(/^\d+\. /, '')),
-        type: RowType.Ordered,
-      };
-    }
-    if (/^#+ /.test(line)) {
-      prevDepth = depth;
-      return { depth, text: parseText(line.replace(/^#+ /, '')), type: RowType.Text };
-    }
+  }
+  return lines;
+}
 
-    return { depth: 0, text: line, type: RowType.Raw };
-  });
+export function parseMarkdown(text: string): TableData {
+  const lines = parseLines(text);
 
   const maxDepth = Math.max(...lines.map((row) => row.depth));
   const createRow = (): TableRow => {
     return {
       type: RowType.Text,
-      raws: [],
-      columns: times(maxDepth).map((i) => ({ text: '' })),
+      columns: times(maxDepth).map((i) => ({ text: '', heading: '', trailing: '' })),
     };
   };
   const rows: TableRow[] = [];
@@ -51,19 +82,23 @@ export function parseMarkdown(text: string): TableData {
   for (const line of lines) {
     switch (line.type) {
       case RowType.Text: {
-        currentRow.columns[line.depth] = { text: line.text };
+        currentRow.columns[line.depth] = {
+          text: line.text,
+          heading: line.heading,
+          trailing: line.trailing,
+        };
         break;
       }
       case RowType.Checklist:
       case RowType.Ordered: {
         currentRow.type = line.type;
-        currentRow.columns[maxDepth] = { text: line.text };
+        currentRow.columns[maxDepth] = {
+          text: line.text,
+          heading: line.heading,
+          trailing: line.trailing,
+        };
         rows.push(currentRow);
         currentRow = createRow();
-        break;
-      }
-      case RowType.Raw: {
-        currentRow.raws.push(line.text);
         break;
       }
       default: {
@@ -72,9 +107,18 @@ export function parseMarkdown(text: string): TableData {
       }
     }
   }
-  if (currentRow.raws.length || currentRow.columns.some((column) => column.text !== '')) {
+
+  if (currentRow.columns.some((column) => column.text !== '')) {
     rows.push(currentRow);
   }
+  if (rows.length === 0) {
+    return {
+      header: [],
+      separator: [],
+      rows: [],
+    };
+  }
+
   return {
     header: repeatWithFn(maxDepth + 1, (i) => `項目${i + 1}`),
     separator: repeatWithFn(maxDepth + 1, () => '---'),

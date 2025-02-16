@@ -3,6 +3,10 @@ import { parseMarkdown } from './parseMarkdown';
 export function transformMarkdownToTable(text: string): string {
   const table = parseMarkdown(text);
 
+  if (table.rows.length === 0) {
+    return '';
+  }
+
   const header = ['|', table.header.join(' | '), '|'].join(' ');
   const separator = ['|', table.separator.join(' | '), '|'].join(' ');
 
