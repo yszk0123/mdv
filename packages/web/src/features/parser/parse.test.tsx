@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { stringifyMarkdown } from './stringifyMarkdown';
 import { parseMarkdown } from './parseMarkdown';
+import { stringifyMarkdown } from './stringifyMarkdown';
 import { stripCommonIndent } from './stripCommonIndent';
 
 test.each<{

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { transformMarkdownToTable } from './transformMarkdownSectionToTable';
 import { stripCommonIndent } from './stripCommonIndent';
+import { transformMarkdownToTable } from './transformMarkdownSectionToTable';
 
 test.each<{
   title: string;
