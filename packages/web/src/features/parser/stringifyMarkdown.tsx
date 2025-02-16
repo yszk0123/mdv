@@ -16,11 +16,13 @@ export function stringifyMarkdown(table: TableData): string {
           if (i === maxDepth) {
             return `- [ ] ${stringifyText(column.text)}`;
           }
-          return `${'#'.repeat(i + 1)} ${stringifyText(column.text)}`;
+          return `\n${'#'.repeat(i + 1)} ${stringifyText(column.text)}\n`;
         })
         .filter((v) => v !== null)
         .join('\n');
       return text;
     })
-    .join('\n');
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
