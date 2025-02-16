@@ -1,12 +1,12 @@
-import { TableEdit } from '@/features/table/TableEdit';
-import { useCallback, useState, type JSX } from 'react';
-import { Mode } from './type';
 import { stripCommonIndent } from '@/features/parser';
-import { TextEdit } from './components/TextEdit';
+import { TableEdit } from '@/features/table/TableEdit';
+import { type JSX, useCallback, useState } from 'react';
+import type { ZodType } from 'zod';
 import { EditButton } from './components/EditButton';
 import { MarkdownEdit } from './components/MarkdownEdit';
+import { TextEdit } from './components/TextEdit';
 import { ViewButton } from './components/ViewButton';
-import type { ZodType } from 'zod';
+import { Mode } from './type';
 
 function useLocalStorageState<T>({
   key,

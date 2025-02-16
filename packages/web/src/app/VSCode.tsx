@@ -1,10 +1,10 @@
 import { TableEdit } from '@/features/table';
 import type { VscodeMessage, WebviewMessage } from '@mdv/core';
 import { type JSX, useCallback, useEffect, useState } from 'react';
-import { Mode } from './type';
 import { EditButton } from './components/EditButton';
-import { ViewButton } from './components/ViewButton';
 import { MarkdownEdit } from './components/MarkdownEdit';
+import { ViewButton } from './components/ViewButton';
+import { Mode } from './type';
 
 const vscode = acquireVsCodeApi();
 
