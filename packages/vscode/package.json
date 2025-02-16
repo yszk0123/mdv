@@ -36,7 +36,29 @@
         "command": "mdv.closePreview",
         "title": "Close mdv Preview"
       }
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == markdown",
+          "command": "mdv.showPreviewToSide",
+          "group": "navigation",
+          "title": "Preview"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "when": "resourceLangId == markdown",
+          "command": "mdv.showPreviewToSide",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == markdown",
+          "command": "mdv.closePreview",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "type": "module",
   "scripts": {
