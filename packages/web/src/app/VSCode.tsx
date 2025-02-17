@@ -1,16 +1,11 @@
 import { TableEdit } from '@/features/table';
 import type { VscodeMessage, WebviewMessage } from '@mdv/core';
 import { type JSX, useCallback, useEffect, useState } from 'react';
-import { EditButton } from './components/EditButton';
-import { MarkdownEdit } from './components/MarkdownEdit';
-import { ViewButton } from './components/ViewButton';
-import { Mode } from './type';
 
 const vscode = acquireVsCodeApi();
 
 export function VSCode(): JSX.Element {
   const [text, setText] = useState('');
-  const [mode, setMode] = useState<Mode>(Mode.enum.Edit);
 
   useEffect(() => {
     const message: WebviewMessage = { command: 'initialize' };
@@ -44,22 +39,10 @@ export function VSCode(): JSX.Element {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 bg-background">
+    <div className="flex flex-col bg-background">
       <div className="flex flex-col gap-4 m-4">
-        <div className="self-end">
-          {
-            {
-              [Mode.enum.View]: <EditButton onClick={() => setMode(Mode.enum.Edit)} />,
-              [Mode.enum.Edit]: <ViewButton onClick={() => setMode(Mode.enum.View)} />,
-            }[mode]
-          }
-        </div>
-        {
-          {
-            [Mode.enum.View]: <MarkdownEdit text={text} />,
-            [Mode.enum.Edit]: <TableEdit text={text} onSubmit={handleSubmit} />,
-          }[mode]
-        }
+        <div className="flex text-muted-foreground text-sm">Click cell to edit</div>
+        <TableEdit text={text} onSubmit={handleSubmit} />
       </div>
     </div>
   );
