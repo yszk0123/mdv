@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useMemo } from 'react';
+import { type JSX, useCallback, useMemo, useState } from 'react';
 
 import {
   Table,
@@ -11,6 +11,11 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@tanstack/react-form';
 import { type TableData, parseMarkdown, stringifyMarkdown } from '../parser';
+
+interface Pos {
+  row: number;
+  column: number;
+}
 
 export function TableEdit({
   text,
@@ -34,6 +39,8 @@ export function TableEdit({
     }
   }, [form, onSubmit]);
 
+  const [pos, setPos] = useState<Pos | null>(null);
+
   return (
     <form
       onSubmit={(e) => {
@@ -54,16 +61,25 @@ export function TableEdit({
           {tableData.rows.map((row, i) => (
             <TableRow key={`${i}-${row.type}`}>
               {row.columns.map((column, j) => (
-                <TableCell key={`${j}-${column.text}`}>
-                  <form.Field name={`rows[${i}].columns[${j}].text`} mode="array">
-                    {(field) => (
-                      <Textarea
-                        value={field.state.value}
-                        onBlur={handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      />
-                    )}
-                  </form.Field>
+                <TableCell
+                  className="text-foreground hover:bg-foreground/10"
+                  key={`${j}-${column.text}`}
+                  onClick={() => setPos({ row: i, column: j })}
+                >
+                  {pos?.row === i && pos?.column === j ? (
+                    <form.Field name={`rows[${i}].columns[${j}].text`} mode="array">
+                      {(field) => (
+                        <Textarea
+                          autoFocus
+                          value={field.state.value}
+                          onBlur={handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        />
+                      )}
+                    </form.Field>
+                  ) : (
+                    <pre>{column.text}</pre>
+                  )}
                 </TableCell>
               ))}
             </TableRow>
