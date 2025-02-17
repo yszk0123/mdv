@@ -48,7 +48,7 @@ const LOCAL_STORAGE_KEYS = {
 export function Web(): JSX.Element {
   const [mode, setMode] = useLocalStorageState({
     key: LOCAL_STORAGE_KEYS.Mode,
-    initialValue: Mode.enum.View,
+    initialValue: Mode.enum.Edit,
     schema: Mode,
   });
   const [text, setText] = useState(INITIAL_TEXT);

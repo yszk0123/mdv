@@ -10,7 +10,7 @@ const vscode = acquireVsCodeApi();
 
 export function VSCode(): JSX.Element {
   const [text, setText] = useState('');
-  const [mode, setMode] = useState<Mode>(Mode.enum.View);
+  const [mode, setMode] = useState<Mode>(Mode.enum.Edit);
 
   useEffect(() => {
     const message: WebviewMessage = { command: 'initialize' };
