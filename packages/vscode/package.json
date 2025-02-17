@@ -3,7 +3,7 @@
   "name": "vscode-mdv",
   "displayName": "mdv",
   "description": "",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "./dist/extension.cjs",
   "homepage": "https://github.com/yszk0123/mdv",
   "repository": {
