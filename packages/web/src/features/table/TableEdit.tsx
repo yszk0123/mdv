@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useMemo, useState } from 'react';
+import { type JSX, useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   Table,
@@ -40,6 +40,10 @@ export function TableEdit({
   }, [form, onSubmit]);
 
   const [pos, setPos] = useState<Pos | null>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    setPos(null);
+  }, [tableData]);
 
   return (
     <form
