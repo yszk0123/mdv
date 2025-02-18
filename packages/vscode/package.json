@@ -20,12 +20,8 @@
   "engines": {
     "vscode": "^1.97.0"
   },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onLanguage:markdown"
-  ],
+  "categories": ["Other"],
+  "activationEvents": ["onLanguage:markdown"],
   "contributes": {
     "commands": [
       {
@@ -58,6 +54,21 @@
           "group": "navigation"
         }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "mdv",
+      "properties": {
+        "mdv.parserOptions.customHeader": {
+          "type": "object",
+          "properties": {
+            "heading": { "type": "string", "default": "項目${level}" },
+            "headingN": { "type": "array", "items": { "type": "string" } },
+            "unorderedList": { "type": "string", "default": "項目" },
+            "orderedList": { "type": "string", "default": "項目" }
+          }
+        }
+      }
     }
   },
   "type": "module",

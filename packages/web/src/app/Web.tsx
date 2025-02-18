@@ -23,7 +23,7 @@ export function Web(): JSX.Element {
       </div>
       <div className="flex flex-col gap-4 m-4">
         <div className="flex text-muted-foreground text-sm">Click cell to edit</div>
-        <TableEdit text={text} onSubmit={setText} />
+        <TableEdit config={DEFAULT_CONFIGURATION} text={text} onSubmit={setText} />
       </div>
     </div>
   );

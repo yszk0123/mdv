@@ -72,6 +72,8 @@ test.each<{
       - [ ] Checklist 2
       1. Ordered 1
       1. Ordered 2
+      2. Ordered 3
+      1. Ordered 4
     `),
   },
   {

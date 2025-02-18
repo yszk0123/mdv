@@ -1,4 +1,15 @@
+import { DEFAULT_HEADER, type ParserOptions } from '@mdv/core';
 import { type Line, RowType, type TableData, type TableRow } from './type';
+
+interface ReplaceContext {
+  level: number;
+  depth: number;
+}
+function replace(text: string, context: ReplaceContext): string {
+  return text
+    .replaceAll('${level}', String(context.level))
+    .replaceAll('${depth}', String(context.depth));
+}
 
 function times(n: number): number[] {
   return Array.from({ length: n }, (_, i) => i);
@@ -14,15 +25,27 @@ function parseText(s: string): string {
 
 function parseLines(text: string): Line[] {
   const lines: Line[] = [];
-  let prevDepth = 0;
   let heading = '';
   for (const line of text.split('\n')) {
-    const depth = (line.match(/#+/)?.[0].length || 1) - 1;
     switch (true) {
+      case /^#+ /.test(line): {
+        const level = line.match(/^#+/)?.[0].length ?? 1;
+        lines.push({
+          type: RowType.Text,
+          level,
+          depth: 0,
+          text: parseText(line.replace(/^#+ /, '')),
+          heading,
+          trailing: '',
+        });
+        heading = '';
+        break;
+      }
       case /^- \[ \] /.test(line): {
         lines.push({
           type: RowType.Checklist,
-          depth: prevDepth + 1,
+          level: 1,
+          depth: 0,
           text: parseText(line.replace(/- \[ \] /, '')),
           heading,
           trailing: '',
@@ -31,22 +54,12 @@ function parseLines(text: string): Line[] {
         break;
       }
       case /^\d+\. /.test(line): {
+        const level = Number.parseInt(line.match(/^\d+/)?.[0] || '1', 10);
         lines.push({
           type: RowType.Ordered,
-          depth: prevDepth + 1,
+          level,
+          depth: 0,
           text: parseText(line.replace(/^\d+\. /, '')),
-          heading,
-          trailing: '',
-        });
-        heading = '';
-        break;
-      }
-      case /^#+ /.test(line): {
-        prevDepth = depth;
-        lines.push({
-          type: RowType.Text,
-          depth,
-          text: parseText(line.replace(/^#+ /, '')),
           heading,
           trailing: '',
         });
@@ -67,50 +80,86 @@ function parseLines(text: string): Line[] {
   return lines;
 }
 
-export function parseMarkdown(text: string): TableData {
-  const lines = parseLines(text);
+interface Group {
+  lineGroups: Line[][];
+  maxDepth: number;
+  maxHeadingDepth: number;
+  maxChecklistDepth: number;
+  maxOrderedDepth: number;
+}
 
-  const maxDepth = Math.max(...lines.map((row) => row.depth));
+function parseGroup(lines: Line[]): Group {
+  const maxHeadingDepth = Math.max(
+    0,
+    ...lines.filter((v) => v.type === RowType.Text).map((line) => line.level),
+  );
+  const maxChecklistDepth = Math.max(
+    0,
+    ...lines.filter((v) => v.type === RowType.Checklist).map((line) => line.level),
+  );
+  const maxOrderedDepth = Math.max(
+    0,
+    ...lines.filter((v) => v.type === RowType.Ordered).map((line) => line.level),
+  );
+  const maxDepth = maxHeadingDepth + maxChecklistDepth + maxOrderedDepth;
+
+  const lineGroups: Line[][] = [];
+  let currentLineGroup: Line[] = [];
+  let prevDepth = 0;
+  for (const line of lines) {
+    const depth =
+      line.type === RowType.Text
+        ? line.level
+        : line.type === RowType.Checklist
+          ? maxHeadingDepth + line.level
+          : maxHeadingDepth + maxChecklistDepth + line.level;
+    if (depth <= prevDepth) {
+      lineGroups.push(currentLineGroup);
+      currentLineGroup = [];
+    }
+    prevDepth = depth;
+    currentLineGroup.push({ ...line, depth });
+  }
+  if (currentLineGroup.length > 0) {
+    lineGroups.push(currentLineGroup);
+  }
+
+  return { lineGroups, maxDepth, maxHeadingDepth, maxChecklistDepth, maxOrderedDepth };
+}
+
+export function parseMarkdown(text: string, options: ParserOptions = {}): TableData {
+  const lines = parseLines(text);
+  const group = parseGroup(lines);
+
   const createRow = (): TableRow => {
     return {
       type: RowType.Text,
-      columns: times(maxDepth).map((i) => ({ text: '', heading: '', trailing: '' })),
+      columns: times(group.maxDepth).map((i) => ({
+        type: RowType.Text,
+        level: 0,
+        depth: 0,
+        text: '',
+        heading: '',
+        trailing: '',
+      })),
     };
   };
-  const rows: TableRow[] = [];
-  let currentRow: TableRow = createRow();
-  for (const line of lines) {
-    switch (line.type) {
-      case RowType.Text: {
-        currentRow.columns[line.depth] = {
-          text: line.text,
-          heading: line.heading,
-          trailing: line.trailing,
-        };
-        break;
-      }
-      case RowType.Checklist:
-      case RowType.Ordered: {
-        currentRow.type = line.type;
-        currentRow.columns[maxDepth] = {
-          text: line.text,
-          heading: line.heading,
-          trailing: line.trailing,
-        };
-        rows.push(currentRow);
-        currentRow = createRow();
-        break;
-      }
-      default: {
-        line.type satisfies never;
-        break;
-      }
-    }
-  }
 
-  if (currentRow.columns.some((column) => column.text !== '')) {
-    rows.push(currentRow);
-  }
+  const rows: TableRow[] = group.lineGroups.map((lineGroup) => {
+    const row = createRow();
+    for (const line of lineGroup) {
+      row.columns[line.depth - 1] = {
+        type: line.type,
+        level: line.level,
+        depth: line.depth,
+        text: line.text,
+        heading: line.heading,
+        trailing: line.trailing,
+      };
+    }
+    return row;
+  });
+
   if (rows.length === 0) {
     return {
       header: [],
@@ -119,9 +168,31 @@ export function parseMarkdown(text: string): TableData {
     };
   }
 
+  const header = [
+    ...repeatWithFn(group.maxHeadingDepth, (i) => {
+      const heading =
+        options.customHeader?.headingN?.at(i) ?? options.customHeader?.heading ?? DEFAULT_HEADER;
+      return replace(heading, { level: i + 1, depth: i + 1 });
+    }),
+    ...repeatWithFn(group.maxChecklistDepth, (i) => {
+      return replace(options.customHeader?.unorderedList ?? DEFAULT_HEADER, {
+        level: i + 1,
+        depth: group.maxHeadingDepth + i + 1,
+      });
+    }),
+    ...repeatWithFn(group.maxOrderedDepth, (i) => {
+      return replace(options.customHeader?.orderedList ?? DEFAULT_HEADER, {
+        level: i + 1,
+        depth: group.maxHeadingDepth + group.maxChecklistDepth + i + 1,
+      });
+    }),
+  ];
+
   return {
-    header: repeatWithFn(maxDepth + 1, (i) => `項目${i + 1}`),
-    separator: repeatWithFn(maxDepth + 1, () => '---'),
+    header,
+    separator: repeatWithFn(group.maxDepth, () => '---'),
     rows,
   };
 }
+
+console.log(JSON.stringify(parseMarkdown('# foo\n## bar\n- [ ] a', {}), null, 2));

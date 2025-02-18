@@ -46,10 +46,10 @@ test.each<{
       ### Title 3
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 | 項目3 |
-      | --- | --- | --- |
-      | Title 1 | Title 2 | Item 1 |
-      |  |  | Title 3 |
+      | 項目1 | 項目2 | 項目3 | 項目4 |
+      | --- | --- | --- | --- |
+      | Title 1 | Title 2 |  | Item 1 |
+      |  |  | Title 3 |  |
     `),
   },
   {
@@ -101,31 +101,34 @@ test.each<{
     title: 'checklist and ordered list should be parsed correctly',
     input: stripCommonIndent(`
       # Title 1
+      ## Title 2
 
       - [ ] Checklist 1
       - [ ] Checklist 2
       1. Ordered 1
-      1. Ordered 2
+      2. Ordered 2
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 |
-      | --- | --- |
-      | Title 1 | Checklist 1 |
-      |  | Checklist 2 |
-      |  | Ordered 1 |
-      |  | Ordered 2 |
+      | 項目1 | 項目2 | 項目3 | 項目4 | 項目5 |
+      | --- | --- | --- | --- | --- |
+      | Title 1 | Title 2 | Checklist 1 |  |  |
+      |  |  | Checklist 2 | Ordered 1 | Ordered 2 |
     `),
   },
   {
     title: 'raw text should be ignored in table',
     input: stripCommonIndent(`
-      <!-- comment -->
+      <!-- before -->
       # Title 1
+      <!-- middle -->
+      # Title 2
+      <!-- after -->
     `),
     expected: stripCommonIndent(`
       | 項目1 |
       | --- |
       | Title 1 |
+      | Title 2 |
     `),
   },
 ])('$title', ({ input, expected }) => {
