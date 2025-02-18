@@ -9,6 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
+import type { Configuration } from '@mdv/core';
 import { useForm } from '@tanstack/react-form';
 import { type TableData, parseMarkdown, stringifyMarkdown } from '../parser';
 
@@ -18,13 +19,15 @@ interface Pos {
 }
 
 export function TableEdit({
+  config,
   text,
   onSubmit,
 }: {
+  config: Configuration;
   text: string;
   onSubmit: (text: string) => void;
 }): JSX.Element {
-  const tableData = useMemo(() => parseMarkdown(text), [text]);
+  const tableData = useMemo(() => parseMarkdown(text, config.parserOptions), [text, config]);
   const form = useForm<TableData>({
     defaultValues: tableData,
     onSubmit: (values) => {

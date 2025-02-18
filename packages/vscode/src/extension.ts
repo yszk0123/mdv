@@ -1,4 +1,4 @@
-import type { VscodeMessage, WebviewMessage } from '@mdv/core';
+import type { Configuration, VscodeMessage, WebviewMessage } from '@mdv/core';
 import * as vscode from 'vscode';
 
 const DEBOUNCE_DELAY = 500;
@@ -84,6 +84,13 @@ export function activate(context: vscode.ExtensionContext) {
             if (currentDocument != null && currentPanel != null) {
               update(currentDocument, currentPanel);
             }
+            if (currentPanel != null) {
+              const message: VscodeMessage = {
+                command: 'updateConfiguration',
+                config: vscode.workspace.getConfiguration().get('mdv') as Configuration,
+              };
+              currentPanel.webview.postMessage(message);
+            }
             return;
           }
           case 'update': {
@@ -129,6 +136,18 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidCloseTextDocument((document) => {
       if (currentDocument === document) {
         currentDocument = undefined;
+      }
+    }),
+  );
+
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (currentPanel && e.affectsConfiguration('mdv')) {
+        const message: VscodeMessage = {
+          command: 'updateConfiguration',
+          config: vscode.workspace.getConfiguration().get('mdv') as Configuration,
+        };
+        currentPanel.webview.postMessage(message);
       }
     }),
   );
