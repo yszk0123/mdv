@@ -4,14 +4,14 @@ import { type JSX, useState } from 'react';
 import { TextEdit } from './components/TextEdit';
 
 const INITIAL_TEXT = stripCommonIndent(`
-  # 大項目
-  ## 中項目
-  ### 小項目1
-  - [ ] 説明\\n説明
-  - [ ] 説明\\n説明
-  ### 小項目2
-  - [ ] 説明\\n説明
-  `);
+  # Item 1
+  ## Item 2
+  ### Item 3
+  - [ ] Example\\nExample
+  - [ ] Example\\nExample
+  ### Item 4
+  - [ ] Example\\nExample
+`);
 
 export function Web(): JSX.Element {
   const [text, setText] = useState(INITIAL_TEXT);

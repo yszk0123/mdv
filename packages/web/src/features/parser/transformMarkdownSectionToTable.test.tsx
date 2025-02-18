@@ -19,7 +19,7 @@ test.each<{
       - [ ] Item 1
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 |
+      | Item 1 | Item 2 |
       | --- | --- |
       | Title 1 | Item 1 |
     `),
@@ -32,7 +32,7 @@ test.each<{
       - [ ] Item 1
     `),
     expected: [
-      '| 項目1 | 項目2 | 項目3 |',
+      '| Item 1 | Item 2 | Item 3 |',
       '| --- | --- | --- |',
       '| Title 1 | Title 2 | Item 1 |',
     ].join('\n'),
@@ -46,7 +46,7 @@ test.each<{
       ### Title 3
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 | 項目3 | 項目4 |
+      | Item 1 | Item 2 | Item 3 | Item 4 |
       | --- | --- | --- | --- |
       | Title 1 | Title 2 |  | Item 1 |
       |  |  | Title 3 |  |
@@ -63,7 +63,7 @@ test.each<{
       - [ ] Item 3
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 | 項目3 |
+      | Item 1 | Item 2 | Item 3 |
       | --- | --- | --- |
       | Title 1 | Title 2 | Item 1 |
       |  |  | Item 2 |
@@ -79,7 +79,7 @@ test.each<{
       - [ ] Item 2
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 | 項目3 |
+      | Item 1 | Item 2 | Item 3 |
       | --- | --- | --- |
       | Title 1 |  | Item 1 |
       |  | Title 2 | Item 2 |
@@ -92,7 +92,7 @@ test.each<{
       - [ ] Item 1\\nwith newline
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 |
+      | Item 1 | Item 2 |
       | --- | --- |
       | Title 1 | Item 1<br/>with newline |
     `),
@@ -109,7 +109,7 @@ test.each<{
       2. Ordered 2
     `),
     expected: stripCommonIndent(`
-      | 項目1 | 項目2 | 項目3 | 項目4 | 項目5 |
+      | Item 1 | Item 2 | Item 3 | Item 4 | Item 5 |
       | --- | --- | --- | --- | --- |
       | Title 1 | Title 2 | Checklist 1 |  |  |
       |  |  | Checklist 2 | Ordered 1 | Ordered 2 |
@@ -125,7 +125,7 @@ test.each<{
       <!-- after -->
     `),
     expected: stripCommonIndent(`
-      | 項目1 |
+      | Item 1 |
       | --- |
       | Title 1 |
       | Title 2 |

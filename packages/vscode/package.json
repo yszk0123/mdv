@@ -62,10 +62,10 @@
         "mdv.parserOptions.customHeader": {
           "type": "object",
           "properties": {
-            "heading": { "type": "string", "default": "項目${level}" },
+            "heading": { "type": "string", "default": "Item ${level}" },
             "headingN": { "type": "array", "items": { "type": "string" } },
-            "unorderedList": { "type": "string", "default": "項目" },
-            "orderedList": { "type": "string", "default": "項目" }
+            "unorderedList": { "type": "string", "default": "Item" },
+            "orderedList": { "type": "string", "default": "Item" }
           }
         }
       }

@@ -11,7 +11,7 @@ export interface Configuration {
   parserOptions?: ParserOptions;
 }
 
-export const DEFAULT_HEADER = '項目${depth}';
+export const DEFAULT_HEADER = 'Item ${depth}';
 
 export const DEFAULT_CONFIGURATION: Configuration = {
   parserOptions: {
