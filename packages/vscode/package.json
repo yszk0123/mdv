@@ -3,7 +3,7 @@
   "name": "vscode-mdv",
   "displayName": "mdv",
   "description": "",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "./dist/extension.cjs",
   "homepage": "https://github.com/yszk0123/mdv",
   "repository": {
@@ -20,8 +20,12 @@
   "engines": {
     "vscode": "^1.97.0"
   },
-  "categories": ["Other"],
-  "activationEvents": ["onLanguage:markdown"],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
   "contributes": {
     "commands": [
       {
@@ -62,10 +66,24 @@
         "mdv.parserOptions.customHeader": {
           "type": "object",
           "properties": {
-            "heading": { "type": "string", "default": "Item ${level}" },
-            "headingN": { "type": "array", "items": { "type": "string" } },
-            "unorderedList": { "type": "string", "default": "Item" },
-            "orderedList": { "type": "string", "default": "Item" }
+            "heading": {
+              "type": "string",
+              "default": "Item ${level}"
+            },
+            "headingN": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unorderedList": {
+              "type": "string",
+              "default": "Item"
+            },
+            "orderedList": {
+              "type": "string",
+              "default": "Item"
+            }
           }
         }
       }
