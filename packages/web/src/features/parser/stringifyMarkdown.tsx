@@ -1,4 +1,4 @@
-import { RowType, type TableColumn, type TableData } from './type';
+import { TableItemType, type TableColumn, type TableData } from './type';
 
 function stringifyText(s: string): string {
   return s.replace(/\n/g, '\\n');
@@ -6,13 +6,13 @@ function stringifyText(s: string): string {
 
 function stringifyColumn(column: TableColumn, depth: number): string {
   switch (column.type) {
-    case RowType.Text: {
+    case TableItemType.Heading: {
       return `${'#'.repeat(depth + 1)} ${stringifyText(column.text)}`;
     }
-    case RowType.Checklist: {
+    case TableItemType.Checklist: {
       return `- [ ] ${stringifyText(column.text)}`;
     }
-    case RowType.Ordered: {
+    case TableItemType.Ordered: {
       return `${column.level}. ${stringifyText(column.text)}`;
     }
     default: {

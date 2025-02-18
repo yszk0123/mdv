@@ -1,5 +1,5 @@
 import { DEFAULT_HEADER, type ParserOptions } from '@mdv/core';
-import { type Line, RowType, type TableData, type TableRow } from './type';
+import { type Line, TableItemType, type TableData, type TableRow } from './type';
 
 interface ReplaceContext {
   level: number;
@@ -31,7 +31,7 @@ function parseLines(text: string): Line[] {
       case /^#+ /.test(line): {
         const level = line.match(/^#+/)?.[0].length ?? 1;
         lines.push({
-          type: RowType.Text,
+          type: TableItemType.Heading,
           level,
           depth: 0,
           text: parseText(line.replace(/^#+ /, '')),
@@ -43,7 +43,7 @@ function parseLines(text: string): Line[] {
       }
       case /^- \[ \] /.test(line): {
         lines.push({
-          type: RowType.Checklist,
+          type: TableItemType.Checklist,
           level: 1,
           depth: 0,
           text: parseText(line.replace(/- \[ \] /, '')),
@@ -56,7 +56,7 @@ function parseLines(text: string): Line[] {
       case /^\d+\. /.test(line): {
         const level = Number.parseInt(line.match(/^\d+/)?.[0] || '1', 10);
         lines.push({
-          type: RowType.Ordered,
+          type: TableItemType.Ordered,
           level,
           depth: 0,
           text: parseText(line.replace(/^\d+\. /, '')),
@@ -91,15 +91,15 @@ interface Group {
 function parseGroup(lines: Line[]): Group {
   const maxHeadingDepth = Math.max(
     0,
-    ...lines.filter((v) => v.type === RowType.Text).map((line) => line.level),
+    ...lines.filter((v) => v.type === TableItemType.Heading).map((line) => line.level),
   );
   const maxChecklistDepth = Math.max(
     0,
-    ...lines.filter((v) => v.type === RowType.Checklist).map((line) => line.level),
+    ...lines.filter((v) => v.type === TableItemType.Checklist).map((line) => line.level),
   );
   const maxOrderedDepth = Math.max(
     0,
-    ...lines.filter((v) => v.type === RowType.Ordered).map((line) => line.level),
+    ...lines.filter((v) => v.type === TableItemType.Ordered).map((line) => line.level),
   );
   const maxDepth = maxHeadingDepth + maxChecklistDepth + maxOrderedDepth;
 
@@ -108,9 +108,9 @@ function parseGroup(lines: Line[]): Group {
   let prevDepth = 0;
   for (const line of lines) {
     const depth =
-      line.type === RowType.Text
+      line.type === TableItemType.Heading
         ? line.level
-        : line.type === RowType.Checklist
+        : line.type === TableItemType.Checklist
           ? maxHeadingDepth + line.level
           : maxHeadingDepth + maxChecklistDepth + line.level;
     if (depth <= prevDepth) {
@@ -133,9 +133,9 @@ export function parseMarkdown(text: string, options: ParserOptions = {}): TableD
 
   const createRow = (): TableRow => {
     return {
-      type: RowType.Text,
+      type: TableItemType.Heading,
       columns: times(group.maxDepth).map((i) => ({
-        type: RowType.Text,
+        type: TableItemType.Heading,
         level: 0,
         depth: 0,
         text: '',
