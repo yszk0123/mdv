@@ -1,4 +1,4 @@
-import { TableItemType, type TableColumn, type TableData } from './type';
+import { type TableColumn, type TableData, TableItemType } from './type';
 
 function stringifyText(s: string): string {
   return s.replace(/\n/g, '\\n');

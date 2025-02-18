@@ -9,9 +9,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
+import type { Configuration } from '@mdv/core';
 import { useForm } from '@tanstack/react-form';
 import { type TableData, parseMarkdown, stringifyMarkdown } from '../parser';
-import type { Configuration } from '@mdv/core';
 
 interface Pos {
   row: number;

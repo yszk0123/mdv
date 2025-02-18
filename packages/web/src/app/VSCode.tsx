@@ -1,7 +1,7 @@
 import { TableEdit } from '@/features/table';
 import {
-  DEFAULT_CONFIGURATION,
   type Configuration,
+  DEFAULT_CONFIGURATION,
   type VscodeMessage,
   type WebviewMessage,
 } from '@mdv/core';

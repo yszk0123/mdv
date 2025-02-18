@@ -1,5 +1,5 @@
 import { DEFAULT_HEADER, type ParserOptions } from '@mdv/core';
-import { type Line, TableItemType, type TableData, type TableRow } from './type';
+import { type Line, type TableData, TableItemType, type TableRow } from './type';
 
 interface ReplaceContext {
   level: number;
