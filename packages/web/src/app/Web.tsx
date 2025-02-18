@@ -1,5 +1,6 @@
 import { stripCommonIndent } from '@/features/parser';
 import { TableEdit } from '@/features/table/TableEdit';
+import { DEFAULT_CONFIGURATION } from '@mdv/core';
 import { type JSX, useState } from 'react';
 import { TextEdit } from './components/TextEdit';
 
