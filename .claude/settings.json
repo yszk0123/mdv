@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(mise run lint)",
+      "Bash(mise run lint:*)",
+      "Bash(mise run test)",
+      "Bash(mise run test:*)",
+      "Bash(mise run typecheck)",
+      "Bash(rg:*)",
+      "Bash(touch:*)"
+    ],
+    "deny": [
+      "Read(*.log)",
+      "Read(*.tmp)",
+      "Read(*.env)",
+      "Read(*.env.*)",
+      "Read(*.envrc)",
+      "Read(*.cache)",
+      "Read(*.properties)",
+      "Read(*secret*)",
+      "Bash(rm)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path | select(endswith(\".js\") or endswith(\".ts\")) or endswith(\"jsx\") or endswith(\"tsx\"))' | xargs -r pnpx biome format --write"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path | select(endswith(\".md\"))' | xargs -r pnpx prettier --write"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
+  }
+}
