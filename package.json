@@ -14,6 +14,7 @@
     "url": "https://github.com/yszk0123/mdv/issues"
   },
   "license": "MIT",
+  "packageManager": "pnpm@10.29.3",
   "type": "module",
   "sideEffects": false,
   "scripts": {
