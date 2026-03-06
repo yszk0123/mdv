@@ -17,13 +17,13 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "dev": "npm run --workspace @mdv/web dev",
-    "build": "npm run --workspace @mdv/web build",
-    "vscode:webview": "npm run --workspace @mdv/web build:vscode",
-    "vscode:dev": "npm run --workspace vscode-mdv watch",
+    "dev": "pnpm --filter @mdv/web run dev",
+    "build": "pnpm --filter @mdv/web run build",
+    "vscode:webview": "pnpm --filter @mdv/web run build:vscode",
+    "vscode:dev": "pnpm --filter vscode-mdv run watch",
     "test": "vitest",
     "check": "biome check",
-    "deploy:vscode": "npm run --workspace vscode-mdv deploy",
+    "deploy:vscode": "pnpm --filter vscode-mdv run deploy",
     "version:patch": "./scripts/version.sh patch",
     "version:minor": "./scripts/version.sh minor",
     "version:major": "./scripts/version.sh major"
@@ -35,8 +35,5 @@
     "typescript": "5.9.3",
     "vite": "7.3.1",
     "vitest": "4.0.18"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
-    "@mdv/core": "*",
+    "@mdv/core": "workspace:*",
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-form": "^0.42.0",

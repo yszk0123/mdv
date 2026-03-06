@@ -2,7 +2,8 @@
 
 VERSION_SPEC=${1:-patch}
 
-npm version --workspaces --include-workspace-root --no-git-tag-version "$VERSION_SPEC"
+pnpm version --no-git-tag-version "$VERSION_SPEC"
+pnpm -r exec pnpm version --no-git-tag-version "$VERSION_SPEC"
 
 git add package.json packages/*/package.json
 

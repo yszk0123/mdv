@@ -28,14 +28,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      # - name: Cache node_modules
-      #   id: node_modules_cache_id
-      #   uses: ./.github/actions/npm-cache
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
       - name: Install dependencies
-        # run: npm ci
-        run: npm i
+        run: pnpm install
       - name: Build
-        run: npm run build
+        run: pnpm build
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
@@ -47,6 +47,6 @@ jobs:
         uses: actions/deploy-pages@v4
       - name: Publish to VS Code Marketplace
         if: success() && startsWith(github.ref, 'refs/tags/')
-        run: npm run deploy:vscode
+        run: pnpm deploy:vscode
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

@@ -15,16 +15,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Cache node_modules
+      - name: Cache pnpm store
         id: node_modules_cache_id
         uses: ./.github/actions/npm-cache
 
       - name: Install dependencies
         if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
-        run: npm install
+        run: pnpm install
 
       - name: Run Biome
-        run: npm run check
+        run: pnpm check
 
       - name: Run tests
-        run: npm run test
+        run: pnpm test
